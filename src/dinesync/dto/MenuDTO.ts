@@ -1,5 +1,6 @@
 ﻿
     import { IOptionGroupQuantityInfo, IOptionQuantityInfo } from './OrderDTO';
+import { MenuOperationTimeDTO } from './RestaurantDTO';
 
     export type PrinterDestinationType = '' | 'primaryKitchen' | 'secondaryKitchen' | 'bar' | 'none';
 
@@ -8,26 +9,26 @@
         menuId: string,
         menuName: string
     }
-
+    
     export interface IOnlineMenuInfo {
         isTemporarilyUnavailable: boolean;
         reasonForUnavailability: string;
         description:string;
         mediaUri?: string;
     }
-
+    
     export interface IClientMenuEditResponse {
         accountName: string,
         timestamp: number,
         isGranted: boolean
     }
-
+    
     export interface IOptionGroupShared {
         name: string;
         quantityInfoList: Array<IOptionGroupQuantityInfo>;
         optionList: Array<IOptionShared>
     }
-
+    
     export interface IOptionShared {
         name: string;
         quantityInfoList: Array<IOptionQuantityInfo>,
@@ -35,7 +36,7 @@
         sizeToIngredientList: Array<{size: string, ingredientList: Array<IIngredient>}>;
     }
     
-
+    
     export interface IMenuItemOptionGroup extends IOptionGroupShared {
         id: string;
         parentId: string;
@@ -43,7 +44,7 @@
         optionList: Array<IMenuItemOption>;
         typeName: string;
     }
-
+    
     export class MenuItemOptionGroupDTO implements IMenuItemOptionGroup {
         public id: string = '';
         public parentId: string = '';
@@ -53,14 +54,14 @@
         public optionList: Array<MenuItemOptionDTO> = [];
         public typeName: string = 'MenuItemOptionGroupDTO';
     }
-
+    
     export interface IIngredient {
         name: string;
         pricePerUnit: number;
         defaultQuantity: number;
         quantity: number;
     }
-
+    
     export interface IMenuItemOption extends IOptionShared {
         id: string;
         parentId: string;
@@ -75,7 +76,7 @@
         sizeToIngredientList: Array<{size: string, ingredientList: Array<IIngredient>}>;
         typeName: string;
     }
-
+    
     export class MenuItemOptionDTO implements IMenuItemOption {
         public id: string = '';
         public parentId: string = '';
@@ -92,7 +93,7 @@
         public sizeToIngredientList: Array<{size: string, ingredientList: Array<IIngredient>}> = [];
         public typeName: string = 'MenuItemOptionDTO';
     }
-
+    
     export interface IMenuItemPrice {
         id: string;
         parentId: string;
@@ -102,7 +103,7 @@
         position: number;
         typeName: string;
     }
-
+    
     export class MenuItemPriceDTO implements IMenuItemPrice {
         public id: string = '';
         public parentId: string = '';
@@ -112,11 +113,11 @@
         public position: number = 0;
         public typeName: string = 'MenuItemPriceDTO';
     }
-
+    
     export interface IMenuItemBase {
         id: string;
         parentId: string;
-
+    
         // categoryId is deprecated
         categoryId: string;
         menuItemId: string;
@@ -133,11 +134,11 @@
         // coupled with a sizeToQuantityList
         sizeToIngredientList: Array<{size: string, ingredientList: Array<IIngredient>}>;
     }
-
+    
     export class MenuItemBaseDTO implements IMenuItemBase {
         public id: string = '';
         public parentId: string = '';
-
+    
         // categoryId is depecrated
         public categoryId: string = '';
         public menuItemId: string = '';
@@ -149,16 +150,16 @@
         public optionGroupList: Array<MenuItemOptionGroupDTO> = [];
         public sizeToIngredientList: Array<{size: string, ingredientList: Array<IIngredient>}> = [];
     }
-
+    
     export interface ISubmenuItem extends IMenuItemBase {
         typeName: string;
     }
-
+    
     export class SubmenuItemDTO extends MenuItemBaseDTO implements ISubmenuItem {
         public typeName: string = 'SubmenuItemDTO';
     }
-
-    export interface IMenuItem extends IMenuItemBase {
+    
+    export interface IMenuItem extends IMenuItemBase, IOnlineMenuInfo {
         profitCenter: string;
         isAvailableForCarryOut: boolean;
         isHiddenFromWebsite: boolean;
@@ -169,7 +170,7 @@
         lastModified: number;
         typeName: string;
     }
-
+    
     export class MenuItemDTO extends MenuItemBaseDTO implements IMenuItem {
         public profitCenter: string = '';
         public isAvailableForCarryOut: boolean = false;
@@ -178,11 +179,16 @@
         public areTaxesCoveredByPrice: boolean = false;
         public printerDestination: PrinterDestinationType = '';
         public subMenuItemList: Array<SubmenuItemDTO> = [];
+    
+        public isTemporarilyUnavailable: boolean = false;
+        public reasonForUnavailability: string  = '';
+        public mediaUri?: string = '';
+    
         public lastModified: number = 0;
         public typeName: string = 'MenuItemDTO';
     }
-
-    export interface ICategory {
+    
+    export interface ICategory extends IOnlineMenuInfo {
         id: string;
         parentId: string;
         name: string;
@@ -197,8 +203,8 @@
         lastModified: number;
         typeName: string;
     }
-
-    export class CategoryDTO implements ICategory {
+    
+    export class CategoryDTO implements ICategory, IOnlineMenuInfo {
         public id: string = '';
         public parentId: string = '';
         public name: string = '';
@@ -210,34 +216,42 @@
         public printerDestination: PrinterDestinationType = '';
         public menuItemList: Array<MenuItemDTO> = [];
         public position: number = 0;
+    
+        public isTemporarilyUnavailable: boolean = false;
+        public  reasonForUnavailability: string  = '';
+        
         public lastModified: number = 0;
         public typeName: string = 'CategoryDTO';
     }
-
-    export interface IMenu {
+    
+    export interface IMenu extends IOnlineMenuInfo {
         id: string;
         parentId: string;
         name: string;
         description: string;
         isAvailableForCarryOut: boolean;
         categoryList: Array<ICategory>;
-        operationHoursList: Array<any>;
+        operationHoursList: Array<MenuOperationTimeDTO>;
         lastModified: number;
         typeName: string;
     }
-
-    export class MenuDTO implements IMenu {
+    
+    export class MenuDTO implements IMenu, IOnlineMenuInfo {
         public id: string = '';
         public parentId: string = '';
         public name: string = '';
         public description: string = '';
         public isAvailableForCarryOut: boolean = false;
         public categoryList: Array<CategoryDTO> = [];
-        public operationHoursList: Array<any> = [];
+        public operationHoursList: Array<MenuOperationTimeDTO> = [];
+    
+        public isTemporarilyUnavailable: boolean = false;
+        public reasonForUnavailability: string  = '';
+    
         public lastModified: number = 0;
         public typeName: string = 'MenuDTO';
     }
-
+    
     export class MenuStockItemDTO {
         public id: string = '';
         public parentId: string = '';
@@ -248,7 +262,7 @@
         public amountAvailable: number = 0;
         public typeName: string = 'MenuStockItemDTO';
     }
-
+    
     export class InventoryItem {
         id: string = '';
         parentId: string = '';
@@ -259,10 +273,10 @@
         pricePerUnit: number = 0;
         totalUnits: number = 0;
         lastModified: number = 0;
-
+    
         typeName: string = 'InventoryItem';
     }
-
+    
     export class InventoryAdjustment {
         id: string = '';
         parentId: string = ''; // id of InventoryItem
@@ -274,11 +288,12 @@
         adjustmentType: 'orderResync' | 'manual' = 'manual';
         // order resync occurs when an adjustment fails to register
         // at time or order closing.
-
+    
         typeName: string = 'InventoryAdjustment';
     }
-
+    
     export interface IInventoryOffset {
         inventoryItemId: string;
         offset: number;
     }
+    

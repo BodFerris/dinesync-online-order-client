@@ -229,4 +229,3 @@ export interface IModifedObject {
     deletedTypeName?: string,
     typeName: string
 }
-
