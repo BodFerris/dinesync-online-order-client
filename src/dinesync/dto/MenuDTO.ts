@@ -9,6 +9,13 @@
         menuName: string
     }
 
+    export interface IOnlineMenuInfo {
+        isTemporarilyUnavailable: boolean;
+        reasonForUnavailability: string;
+        description:string;
+        mediaUri?: string;
+    }
+
     export interface IClientMenuEditResponse {
         accountName: string,
         timestamp: number,
