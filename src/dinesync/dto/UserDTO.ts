@@ -29,7 +29,7 @@ export class UserDTO {
     public hasAccessToSecuritySettings: boolean = false;
     public canEditInactiveMenu: boolean = false;
 
-    public lastModified: number;
+    public lastModified: number= 0;
     public typeName: string = 'UserDTO';
 }
 

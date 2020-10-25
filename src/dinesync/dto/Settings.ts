@@ -80,7 +80,7 @@ export class RestaurantSiteSettingsDTO {
     public typeName: string = 'RestaurantSiteSettingsDTO'
 }
 
-export type ColorThemeType = 'Blue' | 'Orange' | 'Purple' | 'Blue-Gray' | 'Default' | 'Dark' | 'Light' | '';
+export type ColorThemeType = 'Default' | 'Dark' | 'Light' | '';
 
 export class PosDeviceSettingsDTO  {
     public id: string = '';
@@ -192,7 +192,7 @@ export class SettingsDTO {
     public kitchenPrintIgnoreList: string = '';
     public paymentProcessorField1: string = '';
     public paymentProcessorField2: string = '';
-    public colorTheme: ColorThemeType;
+    public colorTheme: ColorThemeType = '';
     public startingOrderNumber = 100;
     public defaultSalesTax: number = 0;
     public isTipAllowed: boolean = true;
