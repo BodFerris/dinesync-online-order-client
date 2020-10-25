@@ -1,0 +1,1047 @@
+[
+    {
+        "id": "0447a50c-099c-4864-a428-c5238f468e2e",
+        "parentId": "475cd90c-d11b-4351-8a25-d836984c1796",
+        "name": "Main",
+        "description": "",
+        "isAvailableForCarryOut": false,
+        "categoryList": [
+            {
+                "id": "0cb96e9f-4630-4c0e-ae8c-e50fd1518d88",
+                "parentId": "0447a50c-099c-4864-a428-c5238f468e2e",
+                "name": "Dinners",
+                "description": "",
+                "profitCenter": "Main",
+                "isAvailableForCarryOut": false,
+                "isHiddenFromWebsite": false,
+                "areTaxesCoveredByPrice": true,
+                "printerDestination": "primaryKitchen",
+                "position": 0,
+                "lastModified": 1598823998539,
+                "typeName": "CategoryDTO",
+                "menuItemList": [
+                    {
+                        "id": "ae649baa-6d60-4fbe-a00c-e0e904dfdaba",
+                        "parentId": "0cb96e9f-4630-4c0e-ae8c-e50fd1518d88",
+                        "categoryId": "",
+                        "menuItemId": "",
+                        "name": "Pork Rib Dinner",
+                        "description": "",
+                        "priceList": [
+                            {
+                                "id": "922581de-4569-40e0-a6c5-ffc892efbd0b",
+                                "parentId": "ae649baa-6d60-4fbe-a00c-e0e904dfdaba",
+                                "price": 17.51,
+                                "priceText": "",
+                                "size": "",
+                                "position": 0,
+                                "typeName": "MenuItemPriceDTO"
+                            }
+                        ],
+                        "position": 0,
+                        "hasSizes": false,
+                        "optionGroupList": [
+                            {
+                                "id": "48cf9458-559b-4328-afa4-d2d749467c04",
+                                "parentId": "ae649baa-6d60-4fbe-a00c-e0e904dfdaba",
+                                "name": "Sauce",
+                                "quantityInfoList": [
+                                    {
+                                        "size": "",
+                                        "minOptionsAllowed": 0,
+                                        "maxOptionsAllowed": 0,
+                                        "maxQuantityBeforeCharging": 2,
+                                        "price": 1
+                                    }
+                                ],
+                                "position": 0,
+                                "optionList": [
+                                    {
+                                        "id": "5c03035b-94fd-4bce-94c8-8c6bc4aefa99",
+                                        "parentId": "48cf9458-559b-4328-afa4-d2d749467c04",
+                                        "name": "BBQ",
+                                        "isSelectedByDefault": false,
+                                        "isMoreThanOne": true,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": false,
+                                        "quantityWordRange": "",
+                                        "defaultQuantityWord": "",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 1,
+                                                "defaultQuantity": 1,
+                                                "price": 0
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    },
+                                    {
+                                        "id": "e7a98064-2a27-486e-b6cd-40e370e6e172",
+                                        "parentId": "48cf9458-559b-4328-afa4-d2d749467c04",
+                                        "name": "Mustard",
+                                        "isSelectedByDefault": false,
+                                        "isMoreThanOne": true,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": false,
+                                        "quantityWordRange": "",
+                                        "defaultQuantityWord": "",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 1,
+                                                "defaultQuantity": 1,
+                                                "price": 0
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    },
+                                    {
+                                        "id": "8e0dec4b-d439-4293-92fe-1611105b6e34",
+                                        "parentId": "48cf9458-559b-4328-afa4-d2d749467c04",
+                                        "name": "Ketchup",
+                                        "isSelectedByDefault": false,
+                                        "isMoreThanOne": true,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": false,
+                                        "quantityWordRange": "",
+                                        "defaultQuantityWord": "",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 1,
+                                                "defaultQuantity": 1,
+                                                "price": 0
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    }
+                                ],
+                                "typeName": "MenuItemOptionGroupDTO"
+                            },
+                            {
+                                "id": "1463f95a-cfa9-482d-adbb-c770e718bce7",
+                                "parentId": "ae649baa-6d60-4fbe-a00c-e0e904dfdaba",
+                                "name": "Sides",
+                                "quantityInfoList": [
+                                    {
+                                        "size": "",
+                                        "minOptionsAllowed": 1,
+                                        "maxOptionsAllowed": 2,
+                                        "maxQuantityBeforeCharging": 0,
+                                        "price": 2.25
+                                    }
+                                ],
+                                "position": 0,
+                                "optionList": [
+                                    {
+                                        "id": "d5a4b604-0f3c-47de-ab51-60b427f36fdc",
+                                        "parentId": "1463f95a-cfa9-482d-adbb-c770e718bce7",
+                                        "name": "Side of Sauce",
+                                        "isSelectedByDefault": false,
+                                        "isMoreThanOne": false,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": false,
+                                        "quantityWordRange": "",
+                                        "defaultQuantityWord": "",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 1,
+                                                "defaultQuantity": 1,
+                                                "price": 0
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    },
+                                    {
+                                        "id": "651c3e80-ea6d-456a-bc00-d97f2c014b27",
+                                        "parentId": "1463f95a-cfa9-482d-adbb-c770e718bce7",
+                                        "name": "Cole Slaw",
+                                        "isSelectedByDefault": false,
+                                        "isMoreThanOne": false,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": false,
+                                        "quantityWordRange": "",
+                                        "defaultQuantityWord": "",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 1,
+                                                "defaultQuantity": 1,
+                                                "price": 0
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    },
+                                    {
+                                        "id": "f0e39a3e-be3a-4563-8af1-90e00f41a6f2",
+                                        "parentId": "1463f95a-cfa9-482d-adbb-c770e718bce7",
+                                        "name": "Greens",
+                                        "isSelectedByDefault": false,
+                                        "isMoreThanOne": false,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": false,
+                                        "quantityWordRange": "",
+                                        "defaultQuantityWord": "",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 0,
+                                                "defaultQuantity": 1,
+                                                "price": 0
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    },
+                                    {
+                                        "id": "459ccd75-0859-4477-8913-e2f1c93bc26c",
+                                        "parentId": "1463f95a-cfa9-482d-adbb-c770e718bce7",
+                                        "name": "Mac & Cheese",
+                                        "isSelectedByDefault": false,
+                                        "isMoreThanOne": false,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": false,
+                                        "quantityWordRange": "",
+                                        "defaultQuantityWord": "",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 1,
+                                                "defaultQuantity": 1,
+                                                "price": 0
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    }
+                                ],
+                                "typeName": "MenuItemOptionGroupDTO"
+                            },
+                            {
+                                "id": "a69c40b1-5597-46b2-85c8-c66dd8923db6",
+                                "parentId": "ae649baa-6d60-4fbe-a00c-e0e904dfdaba",
+                                "name": "Details",
+                                "quantityInfoList": [
+                                    {
+                                        "size": "",
+                                        "minOptionsAllowed": 0,
+                                        "maxOptionsAllowed": 0,
+                                        "maxQuantityBeforeCharging": 0,
+                                        "price": 0
+                                    }
+                                ],
+                                "position": 0,
+                                "optionList": [
+                                    {
+                                        "id": "ebeafb26-7042-4330-8900-afcec2dd389a",
+                                        "parentId": "a69c40b1-5597-46b2-85c8-c66dd8923db6",
+                                        "name": "Sauce",
+                                        "isSelectedByDefault": true,
+                                        "isMoreThanOne": true,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": true,
+                                        "quantityWordRange": "none,light,reg,heavy",
+                                        "defaultQuantityWord": "reg",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 1,
+                                                "defaultQuantity": 1,
+                                                "price": 0
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    },
+                                    {
+                                        "id": "01aeadd7-a528-4564-8d9f-4f33e862c2c0",
+                                        "parentId": "a69c40b1-5597-46b2-85c8-c66dd8923db6",
+                                        "name": "Extra Sauce",
+                                        "isSelectedByDefault": false,
+                                        "isMoreThanOne": true,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": false,
+                                        "quantityWordRange": "",
+                                        "defaultQuantityWord": "",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 2,
+                                                "defaultQuantity": 2,
+                                                "price": 1
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    },
+                                    {
+                                        "id": "7914bfab-8859-4ace-9f1c-060883449fff",
+                                        "parentId": "a69c40b1-5597-46b2-85c8-c66dd8923db6",
+                                        "name": "Extra Side",
+                                        "isSelectedByDefault": true,
+                                        "isMoreThanOne": true,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": false,
+                                        "quantityWordRange": "",
+                                        "defaultQuantityWord": "",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 2,
+                                                "defaultQuantity": 3,
+                                                "price": 3
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    },
+                                    {
+                                        "id": "d552a0a4-b06d-4db9-82e0-803e190ea469",
+                                        "parentId": "a69c40b1-5597-46b2-85c8-c66dd8923db6",
+                                        "name": "Bread",
+                                        "isSelectedByDefault": false,
+                                        "isMoreThanOne": false,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": false,
+                                        "quantityWordRange": "",
+                                        "defaultQuantityWord": "",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 1,
+                                                "defaultQuantity": 1,
+                                                "price": 1.25
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    }
+                                ],
+                                "typeName": "MenuItemOptionGroupDTO"
+                            }
+                        ],
+                        "sizeToIngredientList": [
+                            {
+                                "size": "",
+                                "ingredientList": []
+                            }
+                        ],
+                        "profitCenter": "Main",
+                        "isAvailableForCarryOut": false,
+                        "isBarBeverage": false,
+                        "isHiddenFromWebsite": false,
+                        "areTaxesCoveredByPrice": true,
+                        "printerDestination": "primaryKitchen",
+                        "subMenuItemList": [],
+                        "lastModified": 1597880129446,
+                        "typeName": "MenuItemDTO"
+                    },
+                    {
+                        "id": "6a2544c3-633d-4a54-ad12-4d073ce4fd32",
+                        "parentId": "0cb96e9f-4630-4c0e-ae8c-e50fd1518d88",
+                        "categoryId": "",
+                        "menuItemId": "",
+                        "name": "Rib Tips",
+                        "description": "",
+                        "priceList": [
+                            {
+                                "id": "2af83063-8e82-4b8a-8fba-d05470d174f8",
+                                "parentId": "6a2544c3-633d-4a54-ad12-4d073ce4fd32",
+                                "price": 10,
+                                "priceText": "",
+                                "size": "",
+                                "position": 0,
+                                "typeName": "MenuItemPriceDTO"
+                            }
+                        ],
+                        "position": 1,
+                        "hasSizes": false,
+                        "optionGroupList": [
+                            {
+                                "id": "c46a729e-f914-4a3c-b5b8-beec0a5bf66a",
+                                "parentId": "6a2544c3-633d-4a54-ad12-4d073ce4fd32",
+                                "name": "Sauce",
+                                "quantityInfoList": [
+                                    {
+                                        "size": "",
+                                        "minOptionsAllowed": 0,
+                                        "maxOptionsAllowed": 0,
+                                        "maxQuantityBeforeCharging": 0,
+                                        "price": 0
+                                    }
+                                ],
+                                "position": 0,
+                                "optionList": [
+                                    {
+                                        "id": "5c03035b-94fd-4bce-94c8-8c6bc4aefa99",
+                                        "parentId": "c46a729e-f914-4a3c-b5b8-beec0a5bf66a",
+                                        "name": "on the side",
+                                        "isSelectedByDefault": false,
+                                        "isMoreThanOne": false,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": false,
+                                        "quantityWordRange": "",
+                                        "defaultQuantityWord": "",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 1,
+                                                "defaultQuantity": 1,
+                                                "price": 0
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    }
+                                ],
+                                "typeName": "MenuItemOptionGroupDTO"
+                            }
+                        ],
+                        "sizeToIngredientList": [
+                            {
+                                "size": "",
+                                "ingredientList": []
+                            }
+                        ],
+                        "profitCenter": "Main",
+                        "isAvailableForCarryOut": false,
+                        "isBarBeverage": false,
+                        "isHiddenFromWebsite": false,
+                        "areTaxesCoveredByPrice": false,
+                        "printerDestination": "primaryKitchen",
+                        "subMenuItemList": [],
+                        "lastModified": 1592601265909,
+                        "typeName": "MenuItemDTO"
+                    },
+                    {
+                        "id": "287cc8aa-e04e-40bc-a859-41e389d5d2d5",
+                        "parentId": "0cb96e9f-4630-4c0e-ae8c-e50fd1518d88",
+                        "categoryId": "",
+                        "menuItemId": "",
+                        "name": "Pork Sandwhich",
+                        "description": "",
+                        "priceList": [
+                            {
+                                "id": "1b624209-1203-4096-956e-549583b3d21a",
+                                "parentId": "287cc8aa-e04e-40bc-a859-41e389d5d2d5",
+                                "price": 5.25,
+                                "priceText": "",
+                                "size": "",
+                                "position": 0,
+                                "typeName": "MenuItemPriceDTO"
+                            }
+                        ],
+                        "position": 2,
+                        "hasSizes": false,
+                        "optionGroupList": [],
+                        "sizeToIngredientList": [
+                            {
+                                "size": "",
+                                "ingredientList": []
+                            }
+                        ],
+                        "profitCenter": "Main",
+                        "isAvailableForCarryOut": false,
+                        "isBarBeverage": false,
+                        "isHiddenFromWebsite": false,
+                        "areTaxesCoveredByPrice": true,
+                        "printerDestination": "primaryKitchen",
+                        "subMenuItemList": [],
+                        "lastModified": 1587949599949,
+                        "typeName": "MenuItemDTO"
+                    },
+                    {
+                        "id": "f8f1fb74-80d7-42bd-8d5c-86436939462f",
+                        "parentId": "0cb96e9f-4630-4c0e-ae8c-e50fd1518d88",
+                        "categoryId": "",
+                        "menuItemId": "",
+                        "name": "Pork Ribs",
+                        "description": "",
+                        "priceList": [
+                            {
+                                "id": "24a78bee-5a21-4bdd-aa19-bca7eff52153",
+                                "parentId": "f8f1fb74-80d7-42bd-8d5c-86436939462f",
+                                "price": 10.5,
+                                "priceText": "",
+                                "size": "half",
+                                "position": 0,
+                                "typeName": "MenuItemPriceDTO"
+                            },
+                            {
+                                "id": "21829560-c2ad-484c-8fe3-09303eeaa9c4",
+                                "parentId": "f8f1fb74-80d7-42bd-8d5c-86436939462f",
+                                "price": 17.5,
+                                "priceText": "",
+                                "size": "full",
+                                "position": 0,
+                                "typeName": "MenuItemPriceDTO"
+                            }
+                        ],
+                        "position": 3,
+                        "hasSizes": false,
+                        "optionGroupList": [
+                            {
+                                "id": "6a4e4085-dec1-41ac-a843-46f460bcfadd",
+                                "parentId": "f8f1fb74-80d7-42bd-8d5c-86436939462f",
+                                "name": "Sauce",
+                                "quantityInfoList": [
+                                    {
+                                        "size": "half",
+                                        "minOptionsAllowed": 0,
+                                        "maxOptionsAllowed": 0,
+                                        "maxQuantityBeforeCharging": 0,
+                                        "price": 0
+                                    },
+                                    {
+                                        "size": "full",
+                                        "minOptionsAllowed": 0,
+                                        "maxOptionsAllowed": 0,
+                                        "maxQuantityBeforeCharging": 0,
+                                        "price": 0
+                                    }
+                                ],
+                                "position": 0,
+                                "optionList": [
+                                    {
+                                        "id": "5c03035b-94fd-4bce-94c8-8c6bc4aefa99",
+                                        "parentId": "6a4e4085-dec1-41ac-a843-46f460bcfadd",
+                                        "name": "on the side",
+                                        "isSelectedByDefault": false,
+                                        "isMoreThanOne": false,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": false,
+                                        "quantityWordRange": "",
+                                        "defaultQuantityWord": "",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "half",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 1,
+                                                "defaultQuantity": 1,
+                                                "price": 0
+                                            },
+                                            {
+                                                "size": "full",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 0,
+                                                "defaultQuantity": 0,
+                                                "price": 0
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "half",
+                                                "ingredientList": []
+                                            },
+                                            {
+                                                "size": "full",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    },
+                                    {
+                                        "id": "80ff6037-d4b8-4144-b110-6da48f3efaa9",
+                                        "parentId": "6a4e4085-dec1-41ac-a843-46f460bcfadd",
+                                        "name": "honey mustard",
+                                        "isSelectedByDefault": false,
+                                        "isMoreThanOne": true,
+                                        "position": 0,
+                                        "menuItemSourceId": "",
+                                        "isQuantityWordUsed": false,
+                                        "quantityWordRange": "",
+                                        "defaultQuantityWord": "",
+                                        "quantityInfoList": [
+                                            {
+                                                "size": "half",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 2,
+                                                "defaultQuantity": 2,
+                                                "price": 1
+                                            },
+                                            {
+                                                "size": "full",
+                                                "minExpectedQuantity": 0,
+                                                "maxQuantityAllowed": 0,
+                                                "maxQuantityBeforeCharging": 3,
+                                                "defaultQuantity": 3,
+                                                "price": 2
+                                            }
+                                        ],
+                                        "optionGroupList": [],
+                                        "sizeToIngredientList": [
+                                            {
+                                                "size": "half",
+                                                "ingredientList": []
+                                            },
+                                            {
+                                                "size": "full",
+                                                "ingredientList": []
+                                            }
+                                        ],
+                                        "typeName": "MenuItemOptionDTO"
+                                    }
+                                ],
+                                "typeName": "MenuItemOptionGroupDTO"
+                            }
+                        ],
+                        "sizeToIngredientList": [
+                            {
+                                "size": "half",
+                                "ingredientList": []
+                            },
+                            {
+                                "size": "full",
+                                "ingredientList": []
+                            }
+                        ],
+                        "profitCenter": "Main",
+                        "isAvailableForCarryOut": false,
+                        "isBarBeverage": false,
+                        "isHiddenFromWebsite": false,
+                        "areTaxesCoveredByPrice": true,
+                        "printerDestination": "primaryKitchen",
+                        "subMenuItemList": [],
+                        "lastModified": 1598823998539,
+                        "typeName": "MenuItemDTO"
+                    }
+                ]
+            }
+        ],
+        "operationHoursList": [
+            {
+                "id": "dff7ce9d-e60c-40eb-9d11-efb4ed4ba8d4",
+                "parentId": "0447a50c-099c-4864-a428-c5238f468e2e",
+                "dayOfWeek": "Monday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            },
+            {
+                "id": "5c1d776b-ae7a-4596-9046-c01771398964",
+                "parentId": "0447a50c-099c-4864-a428-c5238f468e2e",
+                "dayOfWeek": "Tuesday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            },
+            {
+                "id": "b9d58665-661c-428c-881e-8e1a26bc431b",
+                "parentId": "0447a50c-099c-4864-a428-c5238f468e2e",
+                "dayOfWeek": "Wednesday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            },
+            {
+                "id": "4f787164-7f1f-4ec4-b025-8f4e4dffd7dc",
+                "parentId": "0447a50c-099c-4864-a428-c5238f468e2e",
+                "dayOfWeek": "Thursday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            },
+            {
+                "id": "7edd5e71-a3a9-466a-a938-ee19fe6a8b88",
+                "parentId": "0447a50c-099c-4864-a428-c5238f468e2e",
+                "dayOfWeek": "Friday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            },
+            {
+                "id": "50f1ae54-371f-4354-989b-7cbd11442c3d",
+                "parentId": "0447a50c-099c-4864-a428-c5238f468e2e",
+                "dayOfWeek": "Saturday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            },
+            {
+                "id": "a4895b79-9eab-4cb3-8f65-7ea6615fc8c6",
+                "parentId": "0447a50c-099c-4864-a428-c5238f468e2e",
+                "dayOfWeek": "Sunday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            }
+        ],
+        "lastModified": 1598823998539,
+        "typeName": "MenuDTO"
+    },
+    {
+        "id": "3f21e736-948c-4e42-bc9f-435796052e23",
+        "parentId": "475cd90c-d11b-4351-8a25-d836984c1796",
+        "name": "Bar",
+        "description": "",
+        "isAvailableForCarryOut": false,
+        "categoryList": [
+            {
+                "id": "0a551e1b-24ed-4cca-97f9-ee375322fc49",
+                "parentId": "3f21e736-948c-4e42-bc9f-435796052e23",
+                "name": "Vodka",
+                "description": "",
+                "profitCenter": "Bar",
+                "isAvailableForCarryOut": false,
+                "isHiddenFromWebsite": false,
+                "areTaxesCoveredByPrice": true,
+                "printerDestination": "bar",
+                "position": 0,
+                "lastModified": 1592974806508,
+                "typeName": "CategoryDTO",
+                "menuItemList": [
+                    {
+                        "id": "22992ac2-53c4-4930-9f18-9c6fe18fb2ee",
+                        "parentId": "0a551e1b-24ed-4cca-97f9-ee375322fc49",
+                        "categoryId": "",
+                        "menuItemId": "",
+                        "name": "Vodka & Tonic",
+                        "description": "",
+                        "priceList": [
+                            {
+                                "id": "d8d9f288-6bb4-4896-be4b-e068c6598d6d",
+                                "parentId": "22992ac2-53c4-4930-9f18-9c6fe18fb2ee",
+                                "price": 7,
+                                "priceText": "",
+                                "size": "sgl",
+                                "position": 0,
+                                "typeName": "MenuItemPriceDTO"
+                            },
+                            {
+                                "id": "d30ba3ea-d9fe-4d40-844e-5822036051d3",
+                                "parentId": "22992ac2-53c4-4930-9f18-9c6fe18fb2ee",
+                                "price": 13,
+                                "priceText": "",
+                                "size": "dbl",
+                                "position": 0,
+                                "typeName": "MenuItemPriceDTO"
+                            }
+                        ],
+                        "position": 0,
+                        "hasSizes": false,
+                        "optionGroupList": [],
+                        "sizeToIngredientList": [
+                            {
+                                "size": "sgl",
+                                "ingredientList": [
+                                    {
+                                        "name": "ABSOLUTE",
+                                        "pricePerUnit": 2.5,
+                                        "defaultQuantity": 0,
+                                        "quantity": 1.5
+                                    }
+                                ]
+                            },
+                            {
+                                "size": "dbl",
+                                "ingredientList": [
+                                    {
+                                        "name": "ABSOLUTE",
+                                        "pricePerUnit": 2.5,
+                                        "defaultQuantity": 0,
+                                        "quantity": 3
+                                    }
+                                ]
+                            }
+                        ],
+                        "profitCenter": "Bar",
+                        "isAvailableForCarryOut": false,
+                        "isBarBeverage": true,
+                        "isHiddenFromWebsite": false,
+                        "areTaxesCoveredByPrice": true,
+                        "printerDestination": "bar",
+                        "subMenuItemList": [],
+                        "lastModified": 1590275423077,
+                        "typeName": "MenuItemDTO"
+                    },
+                    {
+                        "id": "a923e5b5-77b0-4940-a83f-7e004b9bb945",
+                        "parentId": "0a551e1b-24ed-4cca-97f9-ee375322fc49",
+                        "categoryId": "",
+                        "menuItemId": "",
+                        "name": "Boyd Special",
+                        "description": "",
+                        "priceList": [
+                            {
+                                "id": "818d4bf8-267b-4034-b3d1-5001d7358b6e",
+                                "parentId": "a923e5b5-77b0-4940-a83f-7e004b9bb945",
+                                "price": 5,
+                                "priceText": "",
+                                "size": "sgl",
+                                "position": 0,
+                                "typeName": "MenuItemPriceDTO"
+                            },
+                            {
+                                "id": "00ed4089-1357-4591-9de3-524f76561f8f",
+                                "parentId": "a923e5b5-77b0-4940-a83f-7e004b9bb945",
+                                "price": 10,
+                                "priceText": "",
+                                "size": "dbl",
+                                "position": 0,
+                                "typeName": "MenuItemPriceDTO"
+                            }
+                        ],
+                        "position": 0,
+                        "hasSizes": false,
+                        "optionGroupList": [],
+                        "sizeToIngredientList": [
+                            {
+                                "size": "sgl",
+                                "ingredientList": [
+                                    {
+                                        "name": "WALMART SPICED",
+                                        "pricePerUnit": 1.25,
+                                        "defaultQuantity": 0,
+                                        "quantity": 1
+                                    }
+                                ]
+                            },
+                            {
+                                "size": "dbl",
+                                "ingredientList": [
+                                    {
+                                        "name": "WALMART SPICED",
+                                        "pricePerUnit": 1.25,
+                                        "defaultQuantity": 0,
+                                        "quantity": 2.5
+                                    }
+                                ]
+                            }
+                        ],
+                        "profitCenter": "Bar",
+                        "isAvailableForCarryOut": false,
+                        "isBarBeverage": true,
+                        "isHiddenFromWebsite": false,
+                        "areTaxesCoveredByPrice": true,
+                        "printerDestination": "bar",
+                        "subMenuItemList": [],
+                        "lastModified": 1592974806508,
+                        "typeName": "MenuItemDTO"
+                    }
+                ]
+            }
+        ],
+        "operationHoursList": [
+            {
+                "id": "9b47361a-d290-4779-96d5-54ab2e7089f0",
+                "parentId": "3f21e736-948c-4e42-bc9f-435796052e23",
+                "dayOfWeek": "Monday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            },
+            {
+                "id": "8141fb4b-0369-4b2e-9b06-a2fe9443fbe2",
+                "parentId": "3f21e736-948c-4e42-bc9f-435796052e23",
+                "dayOfWeek": "Tuesday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            },
+            {
+                "id": "b6c93c31-43a0-4f64-8513-962b890116bf",
+                "parentId": "3f21e736-948c-4e42-bc9f-435796052e23",
+                "dayOfWeek": "Wednesday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            },
+            {
+                "id": "a1a120d3-887a-4d29-bd18-34388689eb2e",
+                "parentId": "3f21e736-948c-4e42-bc9f-435796052e23",
+                "dayOfWeek": "Thursday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            },
+            {
+                "id": "639e54ff-1bb9-4160-a7ef-e9ca4cd9a4cf",
+                "parentId": "3f21e736-948c-4e42-bc9f-435796052e23",
+                "dayOfWeek": "Friday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            },
+            {
+                "id": "1bfd7946-f2b8-41f0-99e9-c69d7464d66f",
+                "parentId": "3f21e736-948c-4e42-bc9f-435796052e23",
+                "dayOfWeek": "Saturday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            },
+            {
+                "id": "474c8f55-384a-4d2b-9f55-9ee10a487666",
+                "parentId": "3f21e736-948c-4e42-bc9f-435796052e23",
+                "dayOfWeek": "Sunday",
+                "openTime": 0,
+                "closeTime": 0,
+                "typeName": "MenuOperationTimeDTO",
+                "isAvailable": true,
+                "useRestaurantOpenTime": true,
+                "useRestaurantCloseTime": true
+            }
+        ],
+        "lastModified": 1592974806508,
+        "typeName": "MenuDTO"
+    }
+]

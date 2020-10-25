@@ -1,0 +1,22 @@
+{
+  "name": "throw-away2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "build-dev": "vue-cli-service build --mode development --no-clean"
+  },
+  "dependencies": {
+    "mitt": "^2.1.0",
+    "core-js": "^3.6.5",
+    "vue": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-typescript": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.1",
+    "typescript": "~3.9.3"
+  }
+}

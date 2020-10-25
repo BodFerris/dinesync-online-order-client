@@ -1,0 +1,1007 @@
+:root {
+    --var-primary-color: #97106c;
+    --var-primaryOverlay-color: rgba(151, 16, 108, 0.65);
+    --var-primaryVar1-color: #b01c63;
+    --var-primaryVar2-color: #97106c;
+    --var-primaryVar3-color: #79005A;
+    --var-secondary-color: #FAFAFA;
+    --var-secondaryVar1-color: #dcdcdc;
+    --var-secondaryVar2-color: rgb(60, 60, 60);
+
+    --var-primaryNeutral-color: rgb(128, 128, 128);
+    --var-primaryNeutralVar1-color: rgb(75, 82 ,88);
+    --var-primaryNeutralVar2-color: #c8c8c8;
+    --var-primaryNeutralVar3-color: rgb(225, 225, 225);
+    --var-primaryNeaturalVar4-color: #f4e7f0;
+    --var-primaryNeaturalVar5-color: rgb(90, 90, 90);
+
+    --var-themeColorNeutralVar1-color: #f3b8e1;
+
+    --var-primary-background: #ffffff;
+    --var-primaryOverlay1-background: rgba(255, 255, 255, 0.1);
+    --var-primaryOverlay2-background: rgba(255, 255, 255, 0.14);
+    --var-primaryOverlay3-background: rgba(255, 255, 255, 0.3);
+    --var-primaryOverlay4-background: rgba(255, 255, 255, 0.9);
+
+    --var-secondary-background: #000000;
+    --var-secondaryOverlay1-background: rgba(0, 0, 0, 0.1);
+    --var-secondaryOverlay2-background: rgba(0, 0, 0, 0.12);
+    --var-secondaryOverlay3-background: rgba(0, 0, 0, 0.14);
+    --var-secondaryOverlay4-background: rgba(0, 0, 0, 0.2);
+    --var-secondaryOverlay5-background: rgba(0, 0, 0, 0.3);
+    --var-secondaryOverlay6-background: rgba(0, 0, 0, 0.6);
+    --var-secondaryOverlay7-background: rgba(0, 0, 0, 0.7);
+
+    --var-primaryLink-color: #97106c;
+    --var-secondaryyLink-color: #ffb74d;
+    
+    --var-primaryFont-color: rgb(60, 60, 60);
+    --var-primaryFontVar1-color: #000000;
+    --var-primaryFontVar2-color: rgba(0, 0, 0, 0.7);
+    --var-primaryFontVar3-color: rgba(0, 0, 0, 0.3);
+
+    --var-secondaryFont-color: #ffffff;
+
+    --var-primaryLabelVar1Font-color: rgba(151, 16, 108, 0.65);
+
+    --var-sideBarVar1-background: #b01c63;
+    --var-sideBarVar2-background: #97106c;
+    --var-sideBarFont-color: #ffffff;
+
+     --var-buttonPadding: 0.7rem;
+     --var-navBarItemSelectedWidth: 0.3rem;
+     --var-navBarItemSelectedMarginLeft: 0.2rem;
+     --var-navBarItemIconPaddingLeft: 0.3rem
+}
+
+.nux-inputLabel {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--var-primaryFontVar2-color);
+    text-transform: lowercase;
+}
+
+.nux-labelVertical {
+    margin-bottom: 0.2rem;
+    display: inline-block;
+}
+
+.nux-inputLabel2 {
+    font-size: 1.7rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    color: var(--var-primaryFontVar2-color);
+    text-transform: uppercase;
+}
+
+.borderColor1 {
+    border-color: var(--var-secondaryVar1-color);
+}
+
+.boxShadow1 {
+    box-shadow: 0px -0.8rem 6rem 0.6rem var(--var-secondaryVar1-color);
+}
+
+
+.nux-errorLabel {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color:red;
+    text-transform: lowercase;
+}
+
+.nux-error {
+    color: red;
+}
+
+.nux-textContent {
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.5em;
+    letter-spacing: 0.03rem;
+    max-width: 90rem;
+    box-sizing: border-box;
+    color: var(--var-primaryFont-color);
+}
+
+.nux-textContent.dark {
+    color: var(--var-sideBarFont-color);
+}
+
+.nux-primaryColor {
+    color: var(--var-primary-color);
+}
+
+/* Buttons and Links                         */
+/* ----------------------------------------- */
+.nux-link {
+    text-decoration: none;
+    color: var(var-primaryLink-color);
+}
+
+.nux-link.dark {
+    color: var(--var-secondaryyLink-color);
+}
+
+button.nux-button,
+button.nux-flatButton  {
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+button.nux-button,
+button.nux-flatButton {
+    border-style: solid;
+    border-width: 0.2rem;
+    border-radius: 2px;
+    margin:0;
+    padding: var(--var-buttonPadding);
+}
+
+button.nux-button {
+    border-color: var(--var-primaryVar1-color);
+    background-color: var(--var-primaryVar1-color);
+    color: var(--var-primary-background);
+}
+
+button.nux-flatButton {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--var-primaryFont-color);
+}
+
+
+button.nux-button,
+button.nux-flatButton  {
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.nux-dlg-footerContainer button.nux-flatButton {
+    color: var(--var-primaryVar1-color);
+    margin-left: 1rem;
+    min-width: 8rem;
+}
+
+/* in order to take precednce over other button styles,
+   need to include the button prefix */
+.nux-offsetButtonHorizPadding,
+button.nux-offsetButtonHorizPadding {
+    margin-left: calc(0px - var(--var-buttonPadding));
+}
+
+button.nux-paddingButtonRightOffset,
+.nux-paddingButtonRightOffset {
+    margin-right: calc(0px - var(--var-buttonPadding));
+}
+
+.nux-paddingButtonOffset {
+    padding-left: calc(0px - var(--var-buttonPadding));
+}
+
+.nux-link.button {
+    font-size: 1.4rem;
+    padding: var(--var-buttonPadding) 0;
+}
+
+.nux-tableCell button.nux-button.iconOnly {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--var-primaryFont-color);
+}
+
+.nux-tableCell button.nux-button.iconOnly:active,
+button.nux-button:active {
+    border-color: var(--var-primary-color);
+    background-color: var(--var-primary-color);
+    color: var(--var-primary-background);
+}
+
+.nux-tableCell button.nux-button.iconOnly:focus,
+button.nux-button:focus {
+    outline: none;
+}
+
+.nux-tableCell button.nux-button.iconOnly:disabled,
+button.nux-button:disabled {
+    color: var(--var-primaryOverlay3-background);
+}
+
+button.nux-flatButton.dark {
+    color: var(--var-sideBarFont-color);
+}
+
+.nux-flatButton:active,
+button.nux-flatButton:active {
+    background-color: var(--var-secondaryOverlay5-background);
+    color: var(--var-primaryFontVar1-color);
+}
+
+button.nux-flatButton:focus {
+    outline: none;
+} 
+
+button.nux-flatButton.nux-secondaryColor:active,
+.nux-dlg-footerContainer button.nux-flatButton:active {
+    background-color: var(--var-secondaryOverlay5-background);
+    color: var(--var-primaryLabelVar1Font-color);
+}
+
+button.nux-flatButton.nux-secondaryColor:focus {
+    outline: none;
+} 
+
+
+button.nux-flatButton.dark:active {
+    background-color: var(--var-primaryOverlay3-background);
+    color: var(--var-primaryOverlay4-background);
+}
+
+button.nux-flatButton.dark:focus {
+    outline: none;
+}
+
+button.nux-flatButton:disabled,
+.nux-dlg-footerContainer button.nux-flatButton:disabled {
+    color: var(--var-primaryFontVar3-color);
+}
+
+
+.nux-dlg-footerContainer button.nux-flatButton:disabled {
+    background-color: transparent;
+}
+
+button.nux-flatButton.iconOnly,
+button.nux-button.iconOnly {
+    padding: 0;
+    height: 3.2rem;
+    width: 3.2rem;
+}
+
+button.nux-flatButton.iconOnly .material-icons,
+button.nux-button.iconOnly .material-icons,
+button.nux-flatButton.iconOnl .material-icons-outlined,
+button.nux-button.iconOnl .material-icons-outlined {
+    line-height: 0;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+button.withIcon .material-icons,
+button.withIcon .material-icons-outlined  {
+    font-size:1.7rem;
+}
+
+.standardButtonIconSpacing {
+    margin-left:1rem;
+}
+
+
+button.nux-toolbar {
+    padding: 0; 
+    margin: 0;
+    border-width: 0; 
+    background-color:transparent;
+    color: var(--var-primaryFontVar2-color);
+  }
+
+  button.nux-toolbar.toggleOn {
+      background-color: var(--var-primary-background);
+  }
+  
+  button.nux-toolbar.med {
+    width: 4.2rem;
+    height: 4.2rem;
+  }
+  
+  button.nux-toolbar i.material-icons,
+  button.nux-toolbar i.material-icons-outlined {
+    font-size: 2.4rem;
+  }
+  
+  button.nux-toolbar:hover {
+    background-color: var(--var-secondaryOverlay1-background);
+  }
+  
+  button.nux-toolbar:active {
+    background-color: var(--var-secondaryOverlay5-background);
+  }
+
+  button.nux-toolbar:focus {
+      outline: none;
+  }
+
+  button.nux-flatButton.roundedBorder {
+    border: 1px solid var(--var-secondaryVar2-color);
+    border-radius: 50%;
+  }
+  
+.nux-centerBlock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card and Grid Item                        */
+/* ----------------------------------------- */
+.nux-card {
+    box-sizing: border-box;
+    padding: 2.4rem calc(2.4rem - var(--var-buttonPadding));
+    border: 1px solid transaprent;
+    border-radius: 0.3rem;
+    box-shadow: 0 0.2rem 0.8rem 0 var(--var-secondaryOverlay6-background);
+}
+
+.nux-cardContainer {
+    display: flex; 
+    flex-flow: column;
+    height: 100%;
+}
+
+.nux-cardContentContainer {
+    display: flex; 
+    flex-flow: column; 
+    flex-grow: 1; 
+    flex-shrink: 1; 
+    padding-left: var(--var-buttonPadding); 
+    padding-right: var(--var-buttonPadding)
+}
+
+.nux-cardTitle {
+    font-size: 2.7rem;
+    font-weight: 400; 
+    flex-grow: 0; 
+    flex-shrink: 0; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
+.nux-cardSubtitle {
+    font-size: 1.5rem; 
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-top: 0.5rem;
+}
+
+.nux-content {
+    flex-grow: 1; 
+    flex-shrink: 1;
+}
+
+.nux-commandContainer {
+    flex-grow: 0; 
+    flex-shrink: 0;
+}
+
+
+/* Slider                                    */
+/* ----------------------------------------- */
+.nux-slider {
+    position: relative; 
+    overflow: hidden; 
+    overflow-y: auto; 
+    touch-action: pan-y;
+    -webkit-overflow-scroll: touch
+}
+
+.nux-sliderItemContainer {
+    display: inline-flex;
+    transition-duration: 0.3s;
+    transform: translate(0, 0);
+}
+
+
+/* Sidebar Nav Control                       */
+/* ----------------------------------------- */
+.nux-sideBarClickOverlay {
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    z-index: 999;
+    top: 0;
+    left: 0;
+    background-color: transparent;
+    overflow: hidden;
+}
+
+.nux-sideBarNavContainer {
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    display: flex; 
+    flex-direction: column; 
+    z-index: 1000;
+    overflow: hidden;
+    height: 100%;
+    color: var(--var-sideBarFont-color);
+    background: linear-gradient(to right, var(--var-sideBarVar1-background) 95%, var(--var-sideBarVar2-background));
+    transition: 0.3s;
+    box-sizing: border-box;
+    border: 0 solid transparent;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+.nux-sideBarNavHeader {
+    flex-grow: 0; 
+    flex-shrink: 0;
+}
+
+.nux-sideBarNavContent {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    overflow-y: auto;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+}
+
+.nux-sideBarNavFooter {
+    flex-grow: 0; 
+    flex-shrink: 0;
+}
+
+button.nux-sideBarNavMenuButton {
+    position: absolute; 
+    color: inherit;
+    left: calc(var(--var-navBarItemSelectedMarginLeft) + var(--var-navBarItemSelectedWidth) + var(--var-navBarItemIconPaddingLeft) - 0.3rem);
+    z-index: 10;
+    padding: 0.3rem;
+    margin: 0;
+    border: 0;
+    background-color: transparent;
+}
+
+button.nux-sideBarNavMenuButton:active {
+    background-color: var(--var-primaryOverlay3-background);
+}
+
+button.nux-sideBarNavMenuButton:focus {
+    outline: none;
+}
+
+.nux-sideBarButtonContainer {
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    width:100%;
+    overflow: hidden;
+}
+
+button.nux-sideBarButton {
+    color: inherit;
+    background-color: transparent;
+    border: 0;  
+    margin: 0;
+    padding: 0.7rem 0;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+}
+
+button.nux-sideBarButton:active {
+    background-color: var(--var-primaryOverlay3-background);
+}
+
+button.nux-sideBarButton:focus {
+    outline: none;
+}
+
+.nux-sideBarButtonContent {
+    display: flex; 
+    align-items: center;
+    justify-content: left;
+    width: 100%;
+    overflow: hidden;
+}
+
+.nux-sideBarNavItemSelectedMarker {
+    flex-grow: 0; 
+    flex-shrink: 0; 
+    width: var(--var-navBarItemSelectedWidth);
+    align-self: stretch;
+    margin-left: var(--var-navBarItemSelectedMarginLeft);
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    box-sizing: content-box;
+    overflow: hidden;
+}
+
+.nux-sideBarButtonIconContainer {
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding: 0 calc(var(--var-navBarItemSelectedWidth) + var(--var-navBarItemSelectedWidth)) 0 var(--var-navBarItemIconPaddingLeft);
+}
+
+.nux-sideBarButtonLabelContainer {
+    justify-content: left;
+    box-sizing: border-box;
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding-left: 1rem;
+    padding-right: 0.3rem;
+    margin: 0;
+    overflow: hidden;
+}
+
+.nux-sideBarNavItemSelectedMarker.selected {
+    background-color: var(--var-sideBarFont-color);
+}
+
+
+/* Tab Control                               */
+/* ----------------------------------------- */
+.nux-tabContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.nux-tabHeader {
+    display: flex;
+    align-items: center;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.nux-tabHeaderItem {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    font-size: 2.2rem;
+    letter-spacing:1.5px;
+}
+
+.nux-tabHeaderItem:first-child {
+    padding-left: 0;
+}
+
+.nux-tabHeaderSelected {
+    text-decoration: underline;
+}
+
+.nux-tabHeaderUnselected {
+    color: var(--var-primaryNeutral-color);
+}
+
+.nux-tabContentContainer {
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: inline-flex;
+    position: relative; 
+    height: 100%;
+    overflow: hidden;
+    transition-duration: 0.25s;
+    transition-property: transform;
+}
+
+.nux-tabItem {
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    padding-left: 1px; 
+    padding-right: 1px; 
+    box-sizing: border-box;
+}
+
+
+/* Dialog and Overlays                       */
+/* ----------------------------------------- */
+#nuxClickEater {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+    top: 0;
+    left: 0;
+    z-index: 2004;
+}
+
+.nux-background-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: var(--var-secondaryOverlay7-background);
+    animation-duration: 0.2s;
+    z-index: 2000;
+}
+
+.nux-tansparent-flyout-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    z-index: 3010;
+}
+
+.nux-dropDownFlyoutContainer {
+    position: absolute; 
+    z-index: 2050;
+    display:inline-flex; 
+    flex-direction:column; 
+    background-color: var(--var-secondary-color); 
+    border: 1px solid var(--var-primaryNeutralVar3-color);
+    border-radius: 0.2rem;
+    box-sizing: border-box;
+    overflow: hidden;
+    overflow-y: auto;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    max-width: 80vw;
+    max-height: 40vh;
+    box-shadow: 0px 0.1rem 0.5rem 0px var(--var-secondaryOverlay4-background), 0px 0.2rem 0.2rem 0px var(--var-secondaryOverlay3-background), 0px 0.3rem 0.1rem -0.2rem var(--var-secondaryOverlay2-background);
+    animation-duration: 0.2s;
+}
+
+.nux-dropDownFlyoutItem {
+    padding: 0.75rem 1.5rem 0.75rem 1.5rem;
+    background-color: var(--var-secondary-color);
+    color: var(--var-primaryFont-color);
+    font-size: 1.7rem;
+    user-select: none;
+}
+
+.nux-dropDownFlyoutItem.selected {
+    background-color: var(--var-primaryNeutralVar3-color);
+}
+
+.nux-dropDownFlyoutItem:active {
+    background-color: var(--var-primaryNeutralVar3-color);
+}
+
+.nux-dlg-simple {
+    display:flex;
+    flex-flow:column;
+    position: absolute;
+    display: none;
+    background-color: var(--var-secondary-color);
+    box-shadow: 0px 0px 2.7rem 0px var(--var-primaryOverlay-color);
+    max-width: 70vw;
+    max-height: 70%;
+    overflow: hidden;
+    overflow-y: auto;
+    touch-action: pan-y;
+    min-width: 10rem;
+    -webkit-overflow-scrolling: touch;
+    color: var(--var-primaryFont-color);
+    animation-duration: 0.2s;
+    box-sizing: border-box;
+    border: 2px solid var(--var-primary-color);
+
+    z-index: 2010;
+}
+
+.nux-dlg-simple.noCommandFooter {
+    padding-bottom: 2rem;
+}
+
+.nux-dlg-simple .nux-dlg-simple-mainContent {
+    padding: 2rem 2rem 0 2rem;
+}
+
+.nux-dlg-container {
+    position: relative;
+    display:flex;
+    flex-flow:column;
+    min-width: 32rem;
+    max-width: 90vw;
+    min-height: 24rem;
+    max-height: 80vh;
+    box-sizing: border-box;
+    overflow: hidden;
+    overflow-y: auto;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    background-color: var(--var-secondary-color);
+    color: var(--var-primaryFont-color);
+    animation-duration: 0.2s;
+}
+
+@media screen and (max-height: 780px) {
+    .nux-dlg-container {
+        max-height: 100vh;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .nux-dlg-container {
+        max-width: 100%;
+    }
+}
+
+.nux-dlg-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding: 2rem 2rem 0 2rem;
+}
+
+.nux-dlg-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    width: 100%;
+}
+
+.nux-dlg-content {
+    font-size: 1.5rem;
+    font-weight: 400;   
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    overflow-y: auto;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    /* on chrome (andy maybe others), the bars would sometimes 
+       show up even though scrollbars were not needed; 1px bttom padding sovled this issue;
+       NOTE: it might have to do with using custom checkboxes */
+    padding: 0 2rem 1px 2rem;
+}
+
+.nux-dlg-secondaryContent {
+    font-size: 1.5rem;
+    font-weight: 400;   
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding: 0 2rem;
+    overflow: hidden;
+}
+
+.nux-dlg-footerContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-top: 1rem;
+    margin-right: -1rem;
+    padding: 0 2rem 2rem 2rem;
+}
+
+.nux-secondaryColor,
+button.nux-secondaryColor {
+    color: var(--var-primaryVar1-color);
+}
+
+
+@keyframes overlayEntrance {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes overlayExit {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes dialogEntrance {
+    0% {
+        opacity: 0;
+        transform: scale3d(1.1, 1.1, 1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+
+@keyframes dialogExit {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: scale3d(0.9, 0.9, 1);
+    }
+}
+
+/* Tables                                    */
+/* ----------------------------------------- */
+
+.nux-tableContainer {
+    display: inline-block; 
+    border: 1px solid var(--var-primaryNeutralVar2-color);
+    padding: 3rem 0 5rem 0;
+    box-shadow: 0px 2px 2px 0px var(--var-primaryNeutralVar3-color);
+}
+
+.nux-table {
+    font-size: 1.5rem; 
+    letter-spacing: 0.05rem; 
+    border-collapse: collapse;
+}
+
+.nux-tableCell {
+    padding-right: 1.5rem; 
+    padding-top: 1.2rem; 
+    padding-bottom: 1.2rem;  
+    border: 0 solid var(--var-primaryNeutralVar3-color);
+    border-bottom-width: 1px;
+    box-sizing: border-box;
+}
+
+.nux-tableCell:first-child {
+    padding-left: 2rem; 
+}
+
+.nux-tableCell:last-child {
+    padding-right: 2rem;
+}
+
+/* progress bar */
+.nux-progressContainer {
+    width: 100%; 
+    height: 0.4rem;
+    position: relative;
+    overflow: hidden;
+    visibility: hidden;
+    background-color: var(--var-primaryNeaturalVar4-color);
+}
+
+.nux-progressBar {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    animation: nux-linearProgressSlide 2.5s infinite ease-in-out; 
+    animation-play-state: paused;
+    transform-origin: left; 
+    background: linear-gradient(to right, var(--var-primary-color), var(--var-primaryVar3-color));
+}
+
+@keyframes nux-linearProgressSlide {
+    0% { transform: scale(0,1) }
+    50% { transform: scale(0.65,1) }
+    100% { transform: translate(100%, 0) scale(0.01,1) }
+  }
+  
+
+
+/* Layout                                    */
+/* ----------------------------------------- */
+.nux-cropText {
+    width: 100%; 
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+}
+
+/* Textbox and other input                   */
+/* ----------------------------------------- */
+input[type="time"],
+input[type="datetime"],
+input[type="date"],
+select.nux-select,
+input[type="text"].nux-textBox,
+input.nux-textBox,
+.nux-textBox,
+.nux-dropdownContainer {
+    border-style: solid;
+    border-color: var(--var-primary-color);
+    margin:0rem;
+    padding: var(--var-buttonPadding);
+    border-width: 0.2rem;
+    background-color:transparent;
+    color: var(--var-primaryFont-color);
+    box-sizing: border-box;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+
+.nux-dropdownContainer {
+    padding-right: 0;
+}
+
+.nux-controlBorder {
+    border-style: solid;
+    border-color: var(--var-primary-color);
+    border-width: 0.2rem;
+}
+
+input[type="time"].primaryBorderActiveColor:active,
+input[type="datetime"].primaryBorderActiveColor:active,
+input[type="date"].primaryBorderActiveColor:active,
+input[type="text"].primaryBorderActiveColor:active,
+.primaryBorderActiveColor:active,
+input.primaryBorderActiveColor:active {
+    border-color: var(--var-primary-color);
+}
+
+input[type="time"]:focus,
+input[type="datetime"]:focus,
+input[type="date"]:focus,
+select.nux-select,
+input.nux-textBox:focus {
+    border-color: var(--var-primaryVar3-color);
+    background-color:var(--var-primary-background);
+    border-width: 0.2rem;
+    color:var(--var-primaryFontVar1-color);
+    outline: none;
+}
+
+input[type="time"]:disabled,
+input[type="datetime"]:disabled,
+input[type="date"]:disabled,
+select.nux-select:disabled,
+input.nux-textBox:disabled {
+    border-color: var(--var-primaryNeutralVar1-color);
+    background-color: var(var-secondaryOverlay5-background);
+} 
+
+.foregroundAccent {
+    color: var(--var-primary-color);
+}
+
+/* Dropdown                                  */
+/* ----------------------------------------- */
+.nux-dropdownContainer {
+    display: inline-flex; 
+    align-items: center; 
+}
+
+.nux-dropdownIconContainer {
+    flex-grow: 0; 
+    flex-shrink: 0; 
+
+    display: flex;
+    font-size: inherit;
+    color: var(--var-primaryVar3-color);
+    padding-left: 0.5rem;
+    pointer-events: none;
+}
+
+.nux-dropdownIconContainer .material-icons {
+    font-size: 1.7em;
+}
+
+input[type=text].nux-dropdownTextbox {
+    color: var(--var-primaryFont-color);
+    font-size: inherit; 
+    flex-grow: 1; 
+    flex-shrink: 1; 
+    margin: 0; 
+    border-width: 0; 
+    padding: 0;
+    min-width: 0;
+    font-family: inherit;
+    background-color: transparent;
+}
+
+input[type=text].nux-dropdownTextbox:focus {
+    outline: none;
+}
