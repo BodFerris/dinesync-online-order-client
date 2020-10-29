@@ -27,6 +27,8 @@
                         "menuItemId": "",
                         "name": "Pork Rib Dinner",
                         "description": "",
+                        "isTemporarilyUnavailable": true,
+                        "reasonForUnavailability": "Out of stock",
                         "priceList": [
                             {
                                 "id": "922581de-4569-40e0-a6c5-ffc892efbd0b",
@@ -433,7 +435,7 @@
                             }
                         ],
                         "profitCenter": "Main",
-                        "isAvailableForCarryOut": false,
+                        "isAvailableForCarryOut": true,
                         "isBarBeverage": false,
                         "isHiddenFromWebsite": false,
                         "areTaxesCoveredByPrice": true,
@@ -519,7 +521,7 @@
                             }
                         ],
                         "profitCenter": "Main",
-                        "isAvailableForCarryOut": false,
+                        "isAvailableForCarryOut": true,
                         "isBarBeverage": false,
                         "isHiddenFromWebsite": false,
                         "areTaxesCoveredByPrice": false,
@@ -716,7 +718,7 @@
                             }
                         ],
                         "profitCenter": "Main",
-                        "isAvailableForCarryOut": false,
+                        "isAvailableForCarryOut": true,
                         "isBarBeverage": false,
                         "isHiddenFromWebsite": false,
                         "areTaxesCoveredByPrice": true,

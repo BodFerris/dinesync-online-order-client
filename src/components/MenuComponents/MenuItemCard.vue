@@ -15,12 +15,15 @@
         <div class="menuItemDescription">{{ menuItem.description }}</div>
 
         <div class="menuItemFooter">
-            <button class="linkButton alignWithoutPadding" @click="handleAddToOrderClick">
+            <button v-if="menuItemAvailabilityInfo.isAvailable" class="linkButton alignWithoutPadding" @click="handleAddToOrderClick">
                 <div class="buttonContentContainer">
                     <i class="material-icons" style="font-size: 1.3em; margin-right: 0.3em;">add_circle</i>
                     <span>Add to order</span>
                 </div>
             </button>
+            <div v-else class="menuItemUnavailableInfoContainer">
+                {{ menuItemAvailabilityInfo.reasonForUnavailability }}
+            </div>
         </div>
     </div>
 </template>
@@ -28,8 +31,10 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 
-import { MenuItemDTO, IMenuItem } from '@/dinesync/dto/MenuDTO';
+import { MenuItemDTO, IMenuItem, MenuDTO } from '@/dinesync/dto/MenuDTO';
 import { StringUtility } from '@/next-ux2/utility/string-utility';
+import { OrderMenuItemDTO } from '@/dinesync/dto/OrderDTO';
+import { MenuHelper } from '@/dinesync/dto/utility/MenuHelper';
 
 export default defineComponent({
   name: 'MenItemCard',
@@ -40,15 +45,24 @@ export default defineComponent({
         default: '32rem'
     },
 
-    menuItem: Object,
-    default: () => {}
+    menuItem: {
+        type: Object,
+        default: () => {}
+    },
+
+    menu: {
+        type: Object,
+        default: () => {}
+    }
   },
   
   setup(props, context) {
 
       // prop refs
       const width = ref(props.width);
-      const menuItem = ref(props.menuItem);
+      const menuItem = ref<MenuItemDTO>(props.menuItem as MenuItemDTO);
+      const menu = ref<MenuDTO>(props.menu as MenuDTO);
+      const menuItemAvailabilityInfo = ref(MenuHelper.getMenuItemAvailabilityInfo(props.menu as MenuDTO, props.menuItem as MenuItemDTO ));
 
       const toCondensedPriceListText = (priceList: Array<{price: number, size: string}>) =>  {
           let returnValue = '';
@@ -74,6 +88,7 @@ export default defineComponent({
       return {
           width,
           menuItem,
+          menuItemAvailabilityInfo,
 
           toCondensedPriceListText,
           handleAddToOrderClick,
@@ -133,6 +148,16 @@ export default defineComponent({
     overflow: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+}
+
+.menuItemUnavailableInfoContainer {
+    padding: 0.7rem 0;
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
 }
 
 .menuItemFooter {

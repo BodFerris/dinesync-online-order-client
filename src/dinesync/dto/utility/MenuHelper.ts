@@ -353,6 +353,7 @@ export class MenuHelper {
         return null;
     }
 
+    // TODO: Need to compensate for timezone
     static isTimeWithinOperationTime(time: number, operationTime: IMenuOperationTime): boolean {
         if (!operationTime.isAvailable) {
             return false;
@@ -431,6 +432,7 @@ export class MenuHelper {
         })
     }
 
+    // TODO: Need to compensate for timezone
     static getDefaultMenuBasedOnTime(time: number, menuList: Array<IMenu>, menuNamePreference = ''): IMenu | null {
         let returnValue = null;
 
@@ -459,6 +461,42 @@ export class MenuHelper {
             }
 
             index++;
+        }
+
+        return returnValue;
+    }
+
+    // TODO: Need to compensate for timezone
+    static getMenuItemAvailabilityInfo(menu: IMenu, menuItem: IMenuItem): { isAvailable: boolean, reasonForUnavailability: string} {
+        let returnValue = {
+            isAvailable: false,
+            reasonForUnavailability: ''
+        };
+
+        if (!menu) {
+            return returnValue;
+        }
+
+        let menuItemCategory = MenuHelper.getCategoryForMenuItem(menu, menuItem);
+
+        if (menuItem.isTemporarilyUnavailable) {
+            returnValue.reasonForUnavailability = menuItem.reasonForUnavailability;
+        }
+        else if(menuItemCategory?.isTemporarilyUnavailable) {
+            returnValue.reasonForUnavailability = menuItemCategory.reasonForUnavailability;
+        }
+        else if (!menuItem.isAvailableForCarryOut) {
+            returnValue.reasonForUnavailability = 'Dine-In only';
+            returnValue.isAvailable = false;
+        }
+        else if (menu.isTemporarilyUnavailable) {
+            returnValue.reasonForUnavailability = menu.reasonForUnavailability
+        }
+        else if (!MenuHelper.isMenuAvailableForTime(Date.now(), menu)) {
+            returnValue.reasonForUnavailability = 'Menu not availabe at curren time';
+        }
+        else {
+            returnValue.isAvailable = true;
         }
 
         return returnValue;

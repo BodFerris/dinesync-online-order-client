@@ -1,4 +1,5 @@
 {
     "name": "BBQ Pit",
-    "defaultTaxRate": 0.101
+    "defaultTaxRate": 0.101,
+    "defaultMenuName": "Bar"
 }

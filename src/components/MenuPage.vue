@@ -14,7 +14,8 @@
                     <div v-for="categoryItem in selectedMenu.categoryList" :key="categoryItem.id" style="margin-bottom: 3rem;">
                         <div style="font-size: 2.4rem; text-transform: uppercase; color: #0a2749; margin-bottom: 1.5rem; letter-spacing: 0.1rem;">{{ categoryItem.name }}</div>
                         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr)); grid-gap: 2rem;">
-                            <MenuItemCard v-for="menuItem in categoryItem.menuItemList" :key="menuItem.id" :menuItem="menuItem" width="auto"
+                            <MenuItemCard v-for="menuItem in categoryItem.menuItemList" :key="menuItem.id" 
+                                    :menu="selectedMenu" :menuItem="menuItem" width="auto"
                                     @addToOrderRequested="addToOrder(menuItem)" />
                         </div>
                     </div>
@@ -87,10 +88,12 @@ import { OrderDTO, OrderStateEnum, OrderGroupDTO, OrderMenuItemDTO } from '@/din
 import { OrderProcessor } from '@/dinesync/ordermanagement/OrderProcessor';
 import { NumUtility, StringUtility, GUID } from '@/next-ux2/utility';
 import { ObjectHelper } from '@/dinesync/dto/utility/ObjectHelper';
+import { MenuHelper } from '@/dinesync/dto/utility/MenuHelper';
 
 interface IRestaurantInfo {
     name: string,
-    defaultTaxRate: number
+    defaultTaxRate: number,
+    defaultMenuName: string
 }
 
 function createOrderNumber() {
@@ -134,7 +137,8 @@ export default defineComponent({
     setup(props, context) {
         let restaurantInfo: IRestaurantInfo = {
             name: '',
-            defaultTaxRate: 0
+            defaultTaxRate: 0,
+            defaultMenuName: ''
         }
 
         let orderProcessor: OrderProcessor;
@@ -204,7 +208,6 @@ export default defineComponent({
         let dataInitalizer = async () => {
             let menuData = await DataManager.fetchMenuData();
             menuList.value = menuData;
-            selectedMenu.value = menuData[0];
 
             menuDropdown.value.resetList(menuList.value);
             await nextTick();
@@ -217,6 +220,13 @@ export default defineComponent({
 
             restaurantInfo = await DataManager.fetchRestaurantData();
             orderProcessor = new OrderProcessor(false, restaurantInfo.defaultTaxRate, false);
+
+            let defaultMenu = MenuHelper.getDefaultMenuBasedOnTime(Date.now(), menuData, restaurantInfo.defaultMenuName);
+            if (!defaultMenu) {
+                defaultMenu = menuData[0];
+            }
+
+            selectedMenu.value = defaultMenu;
 
             mainHeadingText.value = restaurantInfo.name + ' ' + ((menuList.value.length > 1) ? 'Menus' : 'Menu');
         };
