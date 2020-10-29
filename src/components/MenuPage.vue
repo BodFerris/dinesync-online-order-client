@@ -62,6 +62,7 @@
                         <div>TOTAL</div>
                         <div>${{ toPriceText(toMoney(order.totalPrice + order.totalTax)) }}</div>
                     </div>
+                    <button class="checkoutButton">Submit Order</button>
                 </div>
             </div>
         </div>
@@ -73,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, nextTick } from 'vue';
+import { defineComponent, ref, computed, nextTick, onMounted } from 'vue';
 
 import DropdownFlyout, { IDropdownFlyout } from '@/next-ux2/components/containers/dropdown-flyout.vue';
 
@@ -227,11 +228,14 @@ export default defineComponent({
             }
 
             selectedMenu.value = defaultMenu;
+            menuDropdown.value.setSelectedItem(selectedMenu.value);
 
             mainHeadingText.value = restaurantInfo.name + ' ' + ((menuList.value.length > 1) ? 'Menus' : 'Menu');
         };
 
-        dataInitalizer();
+        onMounted(() => {
+            dataInitalizer();
+        });
 
         return {
             orderMenuItemDialog,
@@ -400,6 +404,27 @@ h1 {
 .nux-flatButton.menuItemEditButton .material-icons {
     color: var(--var-primaryNeutralVar3-color);
     font-size: 2rem;
+}
+
+button.checkoutButton { 
+    margin-top: 2rem;
+
+    padding: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+    height: 5rem;
+    background-color: var(--var-sideBarVar2-background);
+    border: 2px solid var(--var-themeColorNeutralVar1-color);
+    border-radius: 5rem;
+
+    color: var(--var-sideBarFont-color);
+    font-size: 1.7rem;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+}
+
+button.checkoutButton:active {
+    background-color: var(--var-primaryVar3-color);
 }
 
 </style>
