@@ -62,7 +62,7 @@
                         <div>TOTAL</div>
                         <div>${{ toPriceText(toMoney(order.totalPrice + order.totalTax)) }}</div>
                     </div>
-                    <button class="checkoutButton">Submit Order</button>
+                    <button class="checkoutButton" @click="submitOrder()">Submit Order</button>
                 </div>
             </div>
         </div>
@@ -70,6 +70,8 @@
         <DropdownFlyout ref="menuDropdown"  width="30rem" textFieldName="name" @selected="changeMenu" />
 
         <OrderMenuItemDialog ref="orderMenuItemDialog" />
+
+        <SubmitPaymentDialog ref="submitPaymentDialog" />
     </div>
 </template>
 
@@ -78,8 +80,11 @@ import { defineComponent, ref, computed, nextTick, onMounted } from 'vue';
 
 import DropdownFlyout, { IDropdownFlyout } from '@/next-ux2/components/containers/dropdown-flyout.vue';
 
-import MenuItemCard from './MenuComponents/MenuItemCard.vue';
+import { IModalDialog } from '@/next-ux2/components/dialogs/modal-dialog.vue';
+import SubmitPaymentDialog from "@/components/PaymentComponents/SubmitPaymentDialog.vue";
 import OrderMenuItemDialog, { IOrderMenuItemDialog } from './MenuComponents/OrderMenuItemDialog.vue';
+
+import MenuItemCard from './MenuComponents/MenuItemCard.vue';
 import TicketMenuItemOptionView from './MenuComponents/TicketMenuItemOptionView.vue';
 
 import { InventoryItem, MenuDTO, MenuItemDTO } from '@/dinesync/dto/MenuDTO';
@@ -130,7 +135,8 @@ export default defineComponent({
         DropdownFlyout,
         MenuItemCard,
         TicketMenuItemOptionView,
-        OrderMenuItemDialog
+        OrderMenuItemDialog,
+        SubmitPaymentDialog
     },
     props: {
     
@@ -148,6 +154,7 @@ export default defineComponent({
         // template refs
         const menuNameContainer = ref(null as unknown as HTMLElement);
         const orderMenuItemDialog = ref(null as unknown as IOrderMenuItemDialog);
+        const submitPaymentDialog = ref(null as unknown as IModalDialog);
         const menuDropdown = ref(null as unknown as IDropdownFlyout);
 
         // data
@@ -206,6 +213,10 @@ export default defineComponent({
             selectedMenu.value = menuToUse;
         }
 
+        const submitOrder = async () => {
+            let result = await submitPaymentDialog.value.show();
+        }
+
         let dataInitalizer = async () => {
             let menuData = await DataManager.fetchMenuData();
             menuList.value = menuData;
@@ -239,6 +250,7 @@ export default defineComponent({
 
         return {
             orderMenuItemDialog,
+            submitPaymentDialog,
             menuDropdown,
             menuNameContainer,
 
@@ -256,7 +268,8 @@ export default defineComponent({
             changeMenu,
             addToOrder,
             editMenuItem,
-            deleteMenuItem
+            deleteMenuItem,
+            submitOrder
         }
 
     }
