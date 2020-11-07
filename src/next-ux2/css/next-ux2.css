@@ -54,7 +54,8 @@
      --var-navBarItemIconPaddingLeft: 0.3rem
 }
 
-.nux-inputLabel {
+.nux-inputLabel,
+.nux-labelVertical {
     font-size: 1.5rem;
     font-weight: 400;
     color: var(--var-primaryFontVar2-color);

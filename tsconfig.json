@@ -12,7 +12,11 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env"
+      "webpack-env",
+      "stripe-v3"
+    ],
+    "typeRoots": [
+        "node_modules/@types"
     ],
     "paths": {
       "@/*": [

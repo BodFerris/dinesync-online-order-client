@@ -5,18 +5,19 @@ declare var google: any;
 const allowedCardNetworks = ["AMEX", "DISCOVER", "INTERAC", "JCB", "MASTERCARD", "VISA"];
 const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
 
+interface ITokenizationSpecification {
+    type: string;
+    parameters: {[key: string]: string};
+}
+
 interface IPaymentAllowedInfo {
     type: string;
+    tokenizationSpecification?: ITokenizationSpecification;
 
     parameters: {
         allowedAuthMethods: Array<string>;
         allowedCardNetworks: Array<string>;
     }
-}
-
-interface ITokenizationSpecification {
-    type: string;
-    parameters: {[key: string]: string};
 }
 
 interface IMerchantInfo {
@@ -35,7 +36,6 @@ interface IPaymentRequestPayload {
     apiVersionMinor: number;
     transactionInfo: ITransactionInfo;
     merchantInfo: IMerchantInfo;
-    tokenizationSpecification: ITokenizationSpecification;
     allowedPaymentMethods: Array<IPaymentAllowedInfo>;
 }
 
@@ -43,6 +43,47 @@ interface IPaymentStatusPayload {
     apiVersion: number;
     apiVersionMinor: number;
     allowedPaymentMethods: Array<IPaymentAllowedInfo>
+}
+
+export interface IChargeResult {
+    isSuccess: boolean,
+    statusMessage: string,
+    chargeId: string
+}
+
+export async function completeTokenPayment(
+    amount: number, 
+    tokenSource: string,
+    description: string, 
+    orderId: string, 
+    ticketId: string) : Promise<IChargeResult> {
+
+    let formData = new FormData();
+    formData.append('amount', StringUtility.toPriceText(amount));
+    formData.append('tokenSource', tokenSource);
+    formData.append('description', description);
+    formData.append('orderId', orderId);
+    formData.append('ticketId', ticketId);
+
+    //let endpoint = 'https://localhost:44354/api/Payment/ChargeTokenPayment';
+    let endpoint = 'https://seattleservice.dinesync.com/api/Payment/ChargeTokenPayment';
+    let result = await fetch(endpoint, {
+        method: 'POST',
+        cache: 'reload',
+        body: formData
+        });
+
+    if (result.ok) {
+        let jsonResultText = await result.text();
+        return JSON.parse(jsonResultText);
+    }
+    else {
+        return {
+            isSuccess: false,
+            statusMessage: "server error with status code " + result.status,
+            chargeId: ''
+        }
+    }
 }
 
 function createPayConnectionTestMessage(): IPaymentStatusPayload {
@@ -76,17 +117,18 @@ export function createPaymentRequestPayload(amount :number): IPaymentRequestPayl
             merchantName: 'Dineysnc Inc.'
         },
 
-        tokenizationSpecification: {
-            type: 'PAYMENT_GATEWAY',
-            parameters: {
-                'gateway': 'stripe',
-                "stripe:version": "2018-10-31",
-                "stripe:publishableKey": "pk_test_pErJdQLLVM4ivblGGn0vscMu00r8aGdkxW"
-            }
-        },
-
         allowedPaymentMethods: [{
             type: 'CARD',
+
+            tokenizationSpecification: {
+                type: 'PAYMENT_GATEWAY',
+                parameters: {
+                    'gateway': 'stripe',
+                    "stripe:version": "2018-10-31",
+                    "stripe:publishableKey": "pk_test_Hh3Sz1xYRjwDAKJ5MxHtGTBY00jOYEr8Xc"
+                }
+            },
+
             parameters: {
                 allowedAuthMethods: allowedCardAuthMethods,
                 allowedCardNetworks: allowedCardNetworks
@@ -151,5 +193,29 @@ export async function loadGpayScript(): Promise<{statusMessage: string, paymentC
             document.head.appendChild(scriptElement);
         }
     })
+}
 
+export async function validateApplePaySession(appleUrl: string) {
+    let formData = new FormData();
+    formData.append('appleUrl', appleUrl);
+
+    //let baseUrl = 'localhost:44354';
+    let baseUrl = 'seattleservice.dinesync.com';
+    let endpoint = `https://${baseUrl}/api/Payment/ValidateApplePaySession`;
+    let result = await fetch(endpoint, {
+        method: 'POST',
+        cache: 'reload',
+        body: formData
+    });
+
+    if (result.ok) {
+        let jsonResultText = await result.text();
+        return JSON.parse(jsonResultText);
+    }
+    else {
+        return {
+            isSuccess: false,
+            statusMessage: "server error with status code " + result.status,
+        }
+    }
 }

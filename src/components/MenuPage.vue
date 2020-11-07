@@ -71,7 +71,7 @@
 
         <OrderMenuItemDialog ref="orderMenuItemDialog" />
 
-        <SubmitPaymentDialog ref="submitPaymentDialog" />
+        <SubmitPaymentDialog ref="submitPaymentDialog" :order="order" />
     </div>
 </template>
 

@@ -1,5 +1,6 @@
 {
     "name": "BBQ Pit",
     "defaultTaxRate": 0.101,
-    "defaultMenuName": "Bar"
+    "defaultMenuName": "Bar",
+    "onlinesurcharge": 1.25
 }
