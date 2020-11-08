@@ -56,7 +56,7 @@
                     </div>
                     <div class="menuItemRow">
                         <div>Tax</div>
-                        <div>{{ order.totalTax }}</div>
+                        <div>{{ toPriceText(order.totalTax) }}</div>
                     </div>
                     <div class="menuItemRow" style="margin-top: 1rem; font-weight: 800;">
                         <div>TOTAL</div>
@@ -193,9 +193,10 @@ export default defineComponent({
             }
         }
 
-        const deleteMenuItem = async (menuItem: OrderMenuItemDTO) => {
+        const deleteMenuItem = (menuItem: OrderMenuItemDTO) => {
             let indexOfMenuItem = ticket.value.menuItemList.findIndex(i => i.id === menuItem.id);
             ticket.value.menuItemList.splice(indexOfMenuItem, 1);
+            orderProcessor.handleTicketMutated(ticket.value, order.value, liquorList);
         }
 
         const getMenuItemPriceNoOptions = (value: OrderMenuItemDTO) => {

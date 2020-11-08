@@ -24,7 +24,10 @@
             <div v-else class="menuItemUnavailableInfoContainer">
                 {{ menuItemAvailabilityInfo.reasonForUnavailability }}
             </div>
+
+            <div v-if="menuItem.areTaxesCoveredByPrice" style="margin-left: auto;">price includes tax</div>
         </div>
+        
     </div>
 </template>
 
@@ -164,6 +167,9 @@ export default defineComponent({
     flex: 0 0 auto;
     box-sizing: border-box;
     padding-top: 0.7rem;
+
+    display: flex;
+    align-items: center;
 }
 
 .menuItemSizeLabel {

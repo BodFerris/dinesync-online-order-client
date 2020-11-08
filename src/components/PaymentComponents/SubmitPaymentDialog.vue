@@ -1,18 +1,30 @@
 <template>
-    <ModalDialog ref="dialog">
+    <ModalDialog ref="dialog" headerPadding="0px">
         <template v-slot:header>
-            <div>Payment</div>
+            <div class="dialogHeading">
+                <div>Charge ${{ grandTotalToChargeText }}</div>
+            </div>
         </template>
         <template v-slot:content>
             <div class="mainContent">
+                <div class="totalSummary" v-if="areGrandTotalsShown">
+                    <label>Subtotal</label>
+                    <div class="price">${{ subtotalText }}</div>
+                </div>
+                <div class="totalSummary" v-if="order && order.totalTax > 0">
+                    <label>Tax</label>
+                    <div class="price">${{ taxTotalText }}</div>
+                </div>
+                <div class="totalSummary"  v-if="onlineSurcharge > 0">
+                    <label>Online Surchage</label>
+                    <div class="price">${{ toPriceText(onlineSurcharge) }}</div>
+                </div>
+                <div class="totalSummary" style="font-weight: 600;"  v-if="areGrandTotalsShown">
+                    <label>Grand Total</label>
+                    <div class="price">${{ grandTotalToChargeText }}</div>
+                </div>
                 <label class="nux-labelVertical">phone number or email</label>
                 <input type="text" class="nux-textBox" style="width: 30rem;" />
-                    
-                <div style="margin-top: 2.2rem">Toal charge: ${{ totalPrice }}</div>
-                <div class="payButtonList">
-                    <div ref="googlePayButtonHost" class="payButtonHost"></div>
-                    <button v-if="applePayAvailabilityState == 'available'" class="payButtonHost applePayButton" @click="handleApplePay()" />
-                </div>
 
                 <div ref="paymentRequestButton"></div>
                 
@@ -21,33 +33,47 @@
                 </div>
             </div>
         </template>
+        <template v-slot:footer>
+            <button class="nux-flatButton" @click="hide()" >Exit</button>
+        </template>
     </ModalDialog>
     
 </template>
 
 <script lang="ts">
-// https://developers.google.com/pay/api/web/reference/request-objects#ButtonOptions
 import SimpleDialog, { ISimpleDialog } from "@/next-ux2/components/dialogs/simple-dialog.vue";
 import ModalDialog, { IModalDialog } from "@/next-ux2/components/dialogs/modal-dialog.vue";
 
 import { computed, defineComponent, onMounted, ref } from 'vue';
 
-import { loadGpayScript, createPaymentRequestPayload, completeTokenPayment, validateApplePaySession } from "@/payments/stripe-processor";
+import { createPaymentRequestPayload, completeTokenPayment, validateApplePaySession } from "@/payments/stripe-processor";
 import { OrderDTO } from '@/dinesync/dto/OrderDTO';
 import { NumUtility, StringUtility } from '@/next-ux2/utility';
 import { OrderHelper } from '@/dinesync/dto/utility/OrderHelper';
-
-
-declare var ApplePaySession: any;
+import { DataManager } from '@/DataManager';
 
 
 function setStatusMessage(hostElement: HTMLElement, statusMessage: string) {
     hostElement.textContent = statusMessage;
 }
 
-function getTotalToCharge(order: OrderDTO): number {
+function getGrandTotalToCharge(order: OrderDTO, onlineSurcharge: number): number {
+    return NumUtility.toMoney(getTotalOrderCost(order) + onlineSurcharge);
+}
+
+function getTotalOrderCost(order: OrderDTO): number {
     return NumUtility.toMoney(order.totalPrice + order.totalTax);
 }
+
+function toPriceText(value: number): string {
+    if (value) {
+        return StringUtility.toPriceText(value);
+    }
+    else {
+        return '0.00';
+    }
+}
+
 
 
 export default defineComponent({
@@ -58,7 +84,11 @@ export default defineComponent({
     },
     emits: [],
     props: {
-        order: OrderDTO
+        order: OrderDTO,
+        onlineSurcharge: {
+            type: Number,
+            default: 0
+        }
     },
 
     setup(props, context) {
@@ -66,20 +96,11 @@ export default defineComponent({
 
         // template refs
         const dialog = ref(null as unknown as IModalDialog);
-        const googlePayButtonHost = ref(null as unknown as HTMLElement);
         const statusContainer = ref(null as unknown as HTMLElement);
         const paymentRequestButton = ref(null as unknown as HTMLDivElement);
 
-        // props and other refs
-        const applePayAvailabilityState = ref('');
-
-        const isApplePaySupported = () => {
-            if ((window as any).ApplePaySession) {
-                return true;
-            }
-            else {
-                return false;
-            }
+        const hide = async () => {
+             dialog.value.hide('ok');
         }
 
         const show = async () => {
@@ -88,168 +109,65 @@ export default defineComponent({
             return result;
         };
 
-        const totalPrice = computed((): string => {
+        const grandTotalToChargeText = computed((): string => {
             let order = props.order;
             if (order) {
-                return StringUtility.toPriceText(getTotalToCharge(order));
+                return toPriceText(getGrandTotalToCharge(order, props.onlineSurcharge));
             }
             else {
                 return '0.00';
             }
         });
 
-        //https://github.com/jnm733/gulp-web/blob/54a3eb578e2da51761c9e0c0e3582340a54f62e1/public/js/deposit.js
-        // good overview of using google nad apple pay
-
-        const handleGooglePay = async () => {
-            let priceToCharge = getTotalToCharge(props.order!);
-            let priceText = StringUtility.toPriceText(priceToCharge);
-            setStatusMessage(statusContainer.value, `Initiated Google Pay for ${priceText} `);
-
-            let paymentRequestPayload = createPaymentRequestPayload(priceToCharge);
-            console.log(paymentRequestPayload);
-            try {
-                let paymentTokenInfo = await paymentClient.loadPaymentData(paymentRequestPayload);
-                console.log(paymentTokenInfo);
-                setStatusMessage(statusContainer.value,  `Google Pay token generated and completing payment`);
-                
-                let tokenJsonText = paymentTokenInfo.paymentMethodData.tokenizationData.token;
-                let tokenObject = JSON.parse(tokenJsonText);
-                let payToken = tokenObject.id;
-
-                let result = await completeTokenPayment(priceToCharge, payToken , 'Test charge', props.order!.id, props.order!.groupList[0].id);
-                if (result.isSuccess) {
-                    setStatusMessage(statusContainer.value, 'Payment sucessful.');
-                }
-                else {
-                    setStatusMessage(statusContainer.value, `Payment failed: ${result.statusMessage}`);
-                }
-
-            }
-            catch (errorInfo) {
-                console.log('payment request failed: ' + errorInfo.statusMessage);
-                setStatusMessage(statusContainer.value, `Google Pay failed: ${errorInfo.statusMessage} `);
-            }
-
-        }
-        
-
-        // https://medium.com/@ionutghisoi95/apple-pay-example-payments-1-acc2b7954b05
-        const handleApplePay = async () => {
-            return new Promise((accept) => {
-
-                const paymentRequest = {
-                    countryCode: "US",
-                    currencyCode: "USD",
-                    supportedNetworks: ["masterCard", "visa", "amex"],
-                    merchantCapabilities: ["supports3DS"],
-                    total: {
-                        label: "Dinesync Inc.",
-                        amount: "1.25"
-                    }
-                }
-
-                const applePaySession = new ApplePaySession(10, paymentRequest);
-
-                applePaySession.onvalidatemerchant = async (eventInfo: any) => {
-                    var validatinResult = await validateApplePaySession(eventInfo.validationURL);
-                    console.log(validatinResult);
-                    applePaySession.completeMerchantValidation(validatinResult);
-                }
-
-                applePaySession.onpaymentauthorized = async (payEventInfo: any) => {
-                    let priceToCharge = getTotalToCharge(props.order!);
-                    console.log(payEventInfo.payment);
-                    console.log(payEventInfo.payment.token);
-                    console.log('aaa; ' + payEventInfo.payment.token.id);
-                    console.log('--------------------');
-                    console.log(JSON.stringify(payEventInfo));
-
-                    applePaySession.completePayment(ApplePaySession.STATUS_FAILURE);
-                    /*
-                    let result = await completeTokenPayment(priceToCharge, payEventInfo.payment.token , 'Test charge', props.order!.id, props.order!.groupList[0].id);
-                    if (result.isSuccess) {
-                        applePaySession.completePayment(ApplePaySession.STATUS_SUCCESS);
-                        setStatusMessage(statusContainer.value, 'Payment sucessful.');
-                    }
-                    else {
-                        applePaySession.completePayment(ApplePaySession.STATUS_FAILURE);
-                        setStatusMessage(statusContainer.value, `Payment failed: ${result.statusMessage}`);
-                    }
-                    */
-                };
-
-                applePaySession.begin();
-
-            })
-
-
-
-        };
-
-        onMounted(async ()=> {
-            let result = await loadGpayScript();
-            paymentClient = result.paymentClient;
-            if (paymentClient) {
-                let googlePayButton = paymentClient.createButton({
-                    onClick: handleGooglePay,
-                    buttonSizeMode: 'fill'
-                });
-
-                googlePayButtonHost.value.appendChild(googlePayButton);
-
+        const subtotalText = computed((): string => {
+            let order = props.order;
+            if (order) {
+                return toPriceText(order.totalPrice);
             }
             else {
-                console.error('Failed to load GPay scripts: ' + result.statusMessage);
+                return '0.00';
             }
+        });
 
-            if ((window as any).ApplePaySession) {
-                if ((window as any).ApplePaySession.canMakePayments()) {
-                    applePayAvailabilityState.value = 'available';
-                }
+
+
+        const taxTotalText  = computed((): string => {
+            let order = props.order;
+            if (order) {
+                return toPriceText(order.totalTax);
             }
-            
-            let stripe = (Stripe as any)('pk_test_Hh3Sz1xYRjwDAKJ5MxHtGTBY00jOYEr8Xc', {
-                apiVersion: "2020-08-27",
-            });
-            let paymentRequest = stripe.paymentRequest({
-                country: 'US',
-                currency: 'usd',
-                total: {
-                    label: 'BBQ Pit',
-                    amount: 1050
-                },
-                requestPayerPhone: true,
-                requestPayerEmail: true
-            });
-
-            let elements = stripe.elements();
-            let payButton = elements.create('paymentRequestButton', {
-                paymentRequest: paymentRequest
-            });
-
-            let canMakePaymentResult = await paymentRequest.canMakePayment();
-            if (canMakePaymentResult) {
-                payButton.mount(paymentRequestButton.value);
+            else {
+                return '0.00';
             }
-            
+        });
 
+        const areGrandTotalsShown = computed((): boolean => {
+            let order = props.order;
+            if (order) {
+                return (props.onlineSurcharge !== 0) || (order.totalTax > 0);
+            }
+            else {
+                return false;
+            }
         });
 
 
         return {
             dialog,
-            googlePayButtonHost,
             statusContainer,
             paymentRequestButton,
 
-            totalPrice,
-            applePayAvailabilityState,
+            onlineSurcharge: props.onlineSurcharge,
 
-            handleApplePay,
+            grandTotalToChargeText,
+            subtotalText,
+            taxTotalText,
+            areGrandTotalsShown,
 
-            isApplePaySupported,
-            show
+            toPriceText: toPriceText,
+
+            show,
+            hide
         };
     }
 });
@@ -262,24 +180,40 @@ export default defineComponent({
     margin-top: 2rem;
 }
 
-.payButtonHost {
-    width: 15rem;
-    height: 4.2rem;
-}
-
-.payButtonList {
-    display: flex;
+.dialogHeading {
+    width: 100%;
+    display: flex; 
     align-items: center;
-    justify-content: space-between;
-    width: 32rem;
+    justify-content: center;
+    height: 7.2rem;
+    font-size: 1.7rem;
+    font-weight: 600;
+
+    background-color: var(--var-sideBarVar1-background);
+    color: var(--var-sideBarFont-color);
 }
 
-.applePayButton {
-    display: inline-block;
-    -webkit-appearance: -apple-pay-button;
-    -apple-pay-button-type: check-out; 
-    -apple-pay-button-style: black;
+.totalSummary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
 }
+
+.totalSummary label {
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+
+    color: var(--var-primary-color);
+}
+
+.totalSummary .price {
+    font-size: 1.5rem;
+}
+
 
 .statusContainer {
     display: flex;
