@@ -23,6 +23,10 @@
                     <label>Grand Total</label>
                     <div class="price">${{ grandTotalToChargeText }}</div>
                 </div>
+                <div class="deliveryMethodSummary" style="font-weight: 600; margin-top: 1.5rem">
+                    <label>Delivery Method</label>
+                    <div class="price">Carry-Out</div>
+                </div>
                 <label class="nux-labelVertical">phone number or email</label>
                 <input type="text" class="nux-textBox" style="width: 30rem;" />
 
@@ -233,20 +237,25 @@ export default defineComponent({
     color: var(--var-sideBarFont-color);
 }
 
+.deliveryMethodSummary,
 .totalSummary {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 1rem;
+    font-size: 1.5rem;
 }
 
+.deliveryMethodSummary label,
 .totalSummary label {
     margin: 0;
     padding: 0;
     font-size: 1.5rem;
     text-transform: uppercase;
     letter-spacing: 0.05rem;
+}
 
+.totalSummary label {
     color: var(--var-primary-color);
 }
 
