@@ -1,5 +1,6 @@
 <template>
     <div class="menuItemCard" :style="{width: width}">
+            <div v-if="menuItem.areTaxesCoveredByPrice" class="includesTaxHeading">price includes tax</div>
         <div class="menuItemHeadingContainer">
             <div class="menuItemHeading">
                 <div>{{ menuItem.name }}</div>
@@ -24,8 +25,6 @@
             <div v-else class="menuItemUnavailableInfoContainer">
                 {{ menuItemAvailabilityInfo.reasonForUnavailability }}
             </div>
-
-            <div v-if="menuItem.areTaxesCoveredByPrice" style="margin-left: auto;">price includes tax</div>
         </div>
         
     </div>
@@ -106,6 +105,7 @@ export default defineComponent({
 
 <style scoped>
 .menuItemCard {
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 17rem;
@@ -119,6 +119,18 @@ export default defineComponent({
     color: var(--var-primaryFont-color);
     box-sizing: border-box;
     padding-bottom: 1rem;
+}
+
+.includesTaxHeading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    padding: 0.2rem 1.7rem 0.2rem 0.2rem;
+    width: 100%;
+    
+    text-align: right;
+    font-size: 1.2rem;
 }
 
 .menuItemHeading {
