@@ -71,7 +71,7 @@
 
         <OrderMenuItemDialog ref="orderMenuItemDialog" />
 
-        <SubmitPaymentDialog ref="submitPaymentDialog" :order="order" />
+        <SubmitPaymentDialog ref="submitPaymentDialog" :order="order" :restaurantInfo="restaurantInfo" />
     </div>
 </template>
 
@@ -95,12 +95,8 @@ import { OrderProcessor } from '@/dinesync/ordermanagement/OrderProcessor';
 import { NumUtility, StringUtility, GUID } from '@/next-ux2/utility';
 import { ObjectHelper } from '@/dinesync/dto/utility/ObjectHelper';
 import { MenuHelper } from '@/dinesync/dto/utility/MenuHelper';
+import { IRestaurantInfo } from '@/common/IRestaurantInfo';
 
-interface IRestaurantInfo {
-    name: string,
-    defaultTaxRate: number,
-    defaultMenuName: string
-}
 
 function createOrderNumber() {
     let availableCharacters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -142,12 +138,6 @@ export default defineComponent({
     
     },
     setup(props, context) {
-        let restaurantInfo: IRestaurantInfo = {
-            name: '',
-            defaultTaxRate: 0,
-            defaultMenuName: ''
-        }
-
         let orderProcessor: OrderProcessor;
         let liquorList = new Array<InventoryItem>();
 
@@ -160,6 +150,12 @@ export default defineComponent({
         // data
         const mainHeadingText = ref('');
         const menuList = ref(new Array<MenuDTO>());
+        const restaurantInfo = ref<IRestaurantInfo>( {
+            name: '',
+            defaultTaxRate: 0,
+            defaultMenuName: '',
+            onlineSurcharge: 0
+        });
         const selectedMenu = ref(null as unknown as MenuDTO);
         const order = ref(null as unknown as OrderDTO);
         const ticket = ref(null as unknown as OrderGroupDTO);
@@ -231,10 +227,10 @@ export default defineComponent({
 
             liquorList = await DataManager.fetchLiquorList();
 
-            restaurantInfo = await DataManager.fetchRestaurantData();
-            orderProcessor = new OrderProcessor(false, restaurantInfo.defaultTaxRate, false);
+            restaurantInfo.value = await DataManager.fetchRestaurantData();
+            orderProcessor = new OrderProcessor(false, restaurantInfo.value.defaultTaxRate, false);
 
-            let defaultMenu = MenuHelper.getDefaultMenuBasedOnTime(Date.now(), menuData, restaurantInfo.defaultMenuName);
+            let defaultMenu = MenuHelper.getDefaultMenuBasedOnTime(Date.now(), menuData, restaurantInfo.value.defaultMenuName);
             if (!defaultMenu) {
                 defaultMenu = menuData[0];
             }
@@ -242,7 +238,7 @@ export default defineComponent({
             selectedMenu.value = defaultMenu;
             menuDropdown.value.setSelectedItem(selectedMenu.value);
 
-            mainHeadingText.value = restaurantInfo.name + ' ' + ((menuList.value.length > 1) ? 'Menus' : 'Menu');
+            mainHeadingText.value = restaurantInfo.value.name + ' ' + ((menuList.value.length > 1) ? 'Menus' : 'Menu');
         };
 
         onMounted(() => {
@@ -260,6 +256,7 @@ export default defineComponent({
             order,
             ticket,
             mainHeadingText,
+            restaurantInfo,
             
             toMoney: NumUtility.toMoney,
             toPriceText: StringUtility.toPriceText,

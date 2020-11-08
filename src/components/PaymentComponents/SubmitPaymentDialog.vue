@@ -46,18 +46,25 @@ import ModalDialog, { IModalDialog } from "@/next-ux2/components/dialogs/modal-d
 
 import { computed, defineComponent, onMounted, ref } from 'vue';
 
+import { IConfig } from '@/common/IConfig';
+import { IRestaurantInfo } from '@/common/IRestaurantInfo';
 import { createPaymentRequestPayload, completeTokenPayment, validateApplePaySession } from "@/payments/stripe-processor";
 import { OrderDTO } from '@/dinesync/dto/OrderDTO';
 import { NumUtility, StringUtility } from '@/next-ux2/utility';
 import { OrderHelper } from '@/dinesync/dto/utility/OrderHelper';
 import { DataManager } from '@/DataManager';
 
+declare var AppConfig: IConfig;
 
 function setStatusMessage(hostElement: HTMLElement, statusMessage: string) {
     hostElement.textContent = statusMessage;
 }
 
 function getGrandTotalToCharge(order: OrderDTO, onlineSurcharge: number): number {
+    if (!onlineSurcharge) {
+        onlineSurcharge = 0;
+    }
+
     return NumUtility.toMoney(getTotalOrderCost(order) + onlineSurcharge);
 }
 
@@ -74,7 +81,33 @@ function toPriceText(value: number): string {
     }
 }
 
+async function intializePaymentButton(paymentButtonHost: HTMLElement, restaurantInfo: IRestaurantInfo, order: OrderDTO): Promise<boolean> {
+    let stripe = (Stripe as any)(AppConfig.stripeKey, {
+        apiVersion: "2020-08-27",
+    });
+    let paymentRequest = stripe.paymentRequest({
+        country: 'US',
+        currency: 'usd',
+        total: {
+            label: restaurantInfo.name,
+            amount: Math.round(getGrandTotalToCharge(order, restaurantInfo.onlineSurcharge) * 100)
+        }
+    });
 
+    let elements = stripe.elements();
+    let payButton = elements.create('paymentRequestButton', {
+        paymentRequest: paymentRequest
+    });
+
+    let canMakePaymentResult = await paymentRequest.canMakePayment();
+    if (canMakePaymentResult) {
+        payButton.mount(paymentButtonHost);
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 
 export default defineComponent({
     name: 'SubmitPaymentDialog',
@@ -85,10 +118,7 @@ export default defineComponent({
     emits: [],
     props: {
         order: OrderDTO,
-        onlineSurcharge: {
-            type: Number,
-            default: 0
-        }
+        restaurantInfo: Object
     },
 
     setup(props, context) {
@@ -105,14 +135,28 @@ export default defineComponent({
 
         const show = async () => {
             setStatusMessage(statusContainer.value, '');
-            let result = await dialog.value.show();
+            let waitForDialogToClosePromise = dialog.value.show();
+            
+            await intializePaymentButton(paymentRequestButton.value, props.restaurantInfo as IRestaurantInfo, props.order as OrderDTO);
+
+            let result = await waitForDialogToClosePromise;
             return result;
         };
+
+        const onlineSurcharge = computed((): number => {
+            let restaurantInfo = props.restaurantInfo as IRestaurantInfo;
+            if (restaurantInfo) {
+                return restaurantInfo.onlineSurcharge;
+            }
+            else {
+                return 0;
+            }
+        });
 
         const grandTotalToChargeText = computed((): string => {
             let order = props.order;
             if (order) {
-                return toPriceText(getGrandTotalToCharge(order, props.onlineSurcharge));
+                return toPriceText(getGrandTotalToCharge(order, props.restaurantInfo!.onlineSurcharge));
             }
             else {
                 return '0.00';
@@ -129,8 +173,6 @@ export default defineComponent({
             }
         });
 
-
-
         const taxTotalText  = computed((): string => {
             let order = props.order;
             if (order) {
@@ -144,21 +186,19 @@ export default defineComponent({
         const areGrandTotalsShown = computed((): boolean => {
             let order = props.order;
             if (order) {
-                return (props.onlineSurcharge !== 0) || (order.totalTax > 0);
+                return (props.restaurantInfo!.onlineSurcharge !== 0) || (order.totalTax > 0);
             }
             else {
                 return false;
             }
         });
 
-
         return {
             dialog,
             statusContainer,
             paymentRequestButton,
 
-            onlineSurcharge: props.onlineSurcharge,
-
+            onlineSurcharge,
             grandTotalToChargeText,
             subtotalText,
             taxTotalText,
