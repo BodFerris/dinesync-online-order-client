@@ -1,5 +1,5 @@
 <template>
-    <ModalDialog ref="dialog" headerPadding="0px">
+    <ModalDialog ref="dialog" headerPadding="0px" width="34rem">
         <template v-slot:header>
             <div class="dialogHeading">
                 <div>Charge ${{ grandTotalToChargeText }}</div>
@@ -28,17 +28,18 @@
                     <div class="price">Carry-Out</div>
                 </div>
                 <label class="nux-labelVertical">phone number or email</label>
-                <input type="text" class="nux-textBox" style="width: 30rem;" />
+                <input type="text" class="nux-textBox" style="width: 100%;" />
 
-                <div ref="paymentRequestButton"></div>
                 
                 <div ref="statusContainer" class="statusContainer">
 
                 </div>
+
+<div ref="paymentRequestButton"></div>
             </div>
         </template>
         <template v-slot:footer>
-            <button class="nux-flatButton" @click="hide()" >Exit</button>
+            <button class="nux-flatButton" @click="hide(false)" >Exit</button>
         </template>
     </ModalDialog>
     
@@ -52,7 +53,7 @@ import { computed, defineComponent, onMounted, ref } from 'vue';
 
 import { IConfig } from '@/common/IConfig';
 import { IRestaurantInfo } from '@/common/IRestaurantInfo';
-import { createPaymentRequestPayload, completeTokenPayment, validateApplePaySession } from "@/payments/stripe-processor";
+import { createPaymentIntent } from "@/payments/stripe-processor";
 import { OrderDTO } from '@/dinesync/dto/OrderDTO';
 import { NumUtility, StringUtility } from '@/next-ux2/utility';
 import { OrderHelper } from '@/dinesync/dto/utility/OrderHelper';
@@ -85,16 +86,23 @@ function toPriceText(value: number): string {
     }
 }
 
-async function intializePaymentButton(paymentButtonHost: HTMLElement, restaurantInfo: IRestaurantInfo, order: OrderDTO): Promise<boolean> {
-    let stripe = (Stripe as any)(AppConfig.stripeKey, {
-        apiVersion: "2020-08-27",
-    });
+async function intializePaymentButton(
+        paymentButtonHost: HTMLElement, 
+        statusHostElement: HTMLElement,
+        restaurantInfo: IRestaurantInfo, 
+        order: OrderDTO,
+        paymentSuccesfullyCompletedCallback: ()=> void): Promise<boolean> {
+
+    let stripe = Stripe(AppConfig.stripeKey);
+
+    let grandTotalCharge = getGrandTotalToCharge(order, restaurantInfo.onlineSurcharge);
+
     let paymentRequest = stripe.paymentRequest({
         country: 'US',
         currency: 'usd',
         total: {
             label: restaurantInfo.name,
-            amount: Math.round(getGrandTotalToCharge(order, restaurantInfo.onlineSurcharge) * 100)
+            amount: Math.round(grandTotalCharge * 100)
         }
     });
 
@@ -106,6 +114,49 @@ async function intializePaymentButton(paymentButtonHost: HTMLElement, restaurant
     let canMakePaymentResult = await paymentRequest.canMakePayment();
     if (canMakePaymentResult) {
         payButton.mount(paymentButtonHost);
+        paymentRequest.on('paymentmethod', async (eventInfo: any) => {
+            try {
+                var clientSecret = await createPaymentIntent(grandTotalCharge, order.id, order.groupList[0].id);
+                if (StringUtility.isNullOrEmpty(clientSecret)) {
+                    setStatusMessage(statusHostElement,  'Payment failed.  Problems contacting the server.');
+                    eventInfo.complete('fail');
+                }
+                else {
+                    var confirmResult = await stripe.confirmCardPayment(
+                        clientSecret, {payment_method: eventInfo.paymentMethod.id}, {handleActions: false});
+
+                    if (confirmResult.error) {
+                        let errorMessage = confirmResult.error.message;
+                        if (StringUtility.isNullOrEmpty(errorMessage)) {
+                            errorMessage = ''
+                        }
+
+                        setStatusMessage(statusHostElement,  'Payment failed.  ' + errorMessage);
+                        eventInfo.complete('fail');
+                    }
+                    else {
+                        eventInfo.complete('success');
+                        if (confirmResult.paymentIntent?.status === 'requires_action') {
+                            let stripeConfirmResult = await stripe.confirmCardPayment(clientSecret);
+                            if (stripeConfirmResult.error) {
+                                setStatusMessage(statusHostElement,  'Payment failed.  Try using a different card.');
+                            }
+                            else {
+                                paymentSuccesfullyCompletedCallback();
+                            }
+                        }
+                        else {
+                            paymentSuccesfullyCompletedCallback();
+                        }
+                    }
+                }
+            }
+            catch (errorInfo) {
+                setStatusMessage(statusHostElement,  'Payment failed.  ' + errorInfo.message);
+            }
+
+        });
+
         return true;
     }
     else {
@@ -133,15 +184,30 @@ export default defineComponent({
         const statusContainer = ref(null as unknown as HTMLElement);
         const paymentRequestButton = ref(null as unknown as HTMLDivElement);
 
-        const hide = async () => {
-             dialog.value.hide('ok');
+        const hide = async (isPaymentSucessful: boolean) => {
+            if (isPaymentSucessful) {
+                dialog.value.hide('ok');
+            }
+            else {
+                dialog.value.hide('cancel');
+            }
+             
         }
 
         const show = async () => {
             setStatusMessage(statusContainer.value, '');
             let waitForDialogToClosePromise = dialog.value.show();
             
-            await intializePaymentButton(paymentRequestButton.value, props.restaurantInfo as IRestaurantInfo, props.order as OrderDTO);
+            let wasButtonCreated = await intializePaymentButton(
+                paymentRequestButton.value, 
+                statusContainer.value,
+                props.restaurantInfo as IRestaurantInfo,
+                props.order as OrderDTO, 
+                () => { hide(true); });
+                
+            if (!wasButtonCreated) {
+                setStatusMessage(statusContainer.value, 'System does not support Apple, Google, or Microsoft Pay.');
+            }
 
             let result = await waitForDialogToClosePromise;
             return result;
@@ -267,10 +333,10 @@ export default defineComponent({
 .statusContainer {
     display: flex;
     align-items: center;
-    max-width: 32rem;
     height: 8.6rem;
     width: 100%;
-    margin-top: 2.6rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     overflow: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;

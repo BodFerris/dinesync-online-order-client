@@ -59,7 +59,6 @@ export default defineComponent({
   },
   
   setup(props, context) {
-
       // prop refs
       const width = ref(props.width);
       const menuItem = ref<MenuItemDTO>(props.menuItem as MenuItemDTO);

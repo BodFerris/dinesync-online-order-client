@@ -2,12 +2,12 @@ import { TypeUtility } from './type-utility';
 import { NumUtility } from './num-utility';
 
 export class StringUtility {
-    public static isNullOrEmpty(value: string): boolean {
+    public static isNullOrEmpty(value: string | undefined): boolean {
         if (TypeUtility.isNull(value)) {
             return true;
         }
         
-        if (value.trim() === '') {
+        if (value?.trim() === '') {
             return true;
         }
         else {

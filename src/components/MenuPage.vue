@@ -72,6 +72,13 @@
         <OrderMenuItemDialog ref="orderMenuItemDialog" />
 
         <SubmitPaymentDialog ref="submitPaymentDialog" :order="order" :restaurantInfo="restaurantInfo" />
+
+        <SimpleDialog ref="messageDialog">
+            <div ref="messageDialogContent" style="font-size: 1.5rem; font-weight: 600">
+            </div>
+        </SimpleDialog>
+
+
     </div>
 </template>
 
@@ -80,6 +87,7 @@ import { defineComponent, ref, computed, nextTick, onMounted } from 'vue';
 
 import DropdownFlyout, { IDropdownFlyout } from '@/next-ux2/components/containers/dropdown-flyout.vue';
 
+import SimpleDialog, {ISimpleDialog } from '@/next-ux2/components/dialogs/simple-dialog.vue';
 import { IModalDialog } from '@/next-ux2/components/dialogs/modal-dialog.vue';
 import SubmitPaymentDialog from "@/components/PaymentComponents/SubmitPaymentDialog.vue";
 import OrderMenuItemDialog, { IOrderMenuItemDialog } from './MenuComponents/OrderMenuItemDialog.vue';
@@ -96,6 +104,7 @@ import { NumUtility, StringUtility, GUID } from '@/next-ux2/utility';
 import { ObjectHelper } from '@/dinesync/dto/utility/ObjectHelper';
 import { MenuHelper } from '@/dinesync/dto/utility/MenuHelper';
 import { IRestaurantInfo } from '@/common/IRestaurantInfo';
+import { hPlacement, vPlacement } from '@/next-ux2/utility/point-interface';
 
 
 function createOrderNumber() {
@@ -129,6 +138,7 @@ export default defineComponent({
     name: 'MenuPage',
     components: {
         DropdownFlyout,
+        SimpleDialog,
         MenuItemCard,
         TicketMenuItemOptionView,
         OrderMenuItemDialog,
@@ -146,6 +156,8 @@ export default defineComponent({
         const orderMenuItemDialog = ref(null as unknown as IOrderMenuItemDialog);
         const submitPaymentDialog = ref(null as unknown as IModalDialog);
         const menuDropdown = ref(null as unknown as IDropdownFlyout);
+        const messageDialog = ref(null as unknown as ISimpleDialog);
+        const messageDialogContent = ref(null as unknown as HTMLElement);
 
         // data
         const mainHeadingText = ref('');
@@ -212,6 +224,22 @@ export default defineComponent({
 
         const submitOrder = async () => {
             let result = await submitPaymentDialog.value.show();
+            if (result === 'ok') {
+                showMessage('Payment accepted.');
+            }
+        }
+
+        const showMessage = (message: string, anchorElement?: HTMLElement) => {
+            let horizPos: hPlacement = 'center';
+            let vertPos: vPlacement = 'bottom'
+
+            if (!anchorElement) {
+                anchorElement = document.body;
+                vertPos = 'center';
+            }
+
+            messageDialogContent.value.innerHTML = message;
+            messageDialog.value.show(anchorElement, horizPos, vertPos);
         }
 
         let dataInitalizer = async () => {
@@ -250,6 +278,8 @@ export default defineComponent({
             submitPaymentDialog,
             menuDropdown,
             menuNameContainer,
+            messageDialog,
+            messageDialogContent,
 
             menuList,
             selectedMenu,
