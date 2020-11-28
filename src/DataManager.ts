@@ -1,4 +1,4 @@
-import { CategoryDTO, MenuDTO, MenuItemDTO } from './dinesync/dto/MenuDTO';
+import { CategoryDTO, InventoryItem, MenuDTO, MenuItemDTO } from './dinesync/dto/MenuDTO';
 import { MenuHelper } from './dinesync/dto/utility/MenuHelper';
 
 export class DataManager {
@@ -56,7 +56,7 @@ export class DataManager {
         }
     }
 
-    static async fetchLiquorList(): Promise<any> {
+    static async fetchLiquorList(): Promise<Array<InventoryItem>> {
         var fetchResult = await fetch('liquorList.json');
         if (fetchResult.ok) {
             return JSON.parse(await fetchResult.text());

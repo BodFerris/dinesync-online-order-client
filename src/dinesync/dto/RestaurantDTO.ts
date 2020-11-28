@@ -11,6 +11,17 @@ export interface IRestaurantCoreInfo {
     address2: string;
 }
 
+export interface IRestaurantInfo {
+    name: string;
+    defaultTaxRate: number;
+    defaultMenuName: string;
+    onlineSurcharge: number;
+    hasOnlineOrders: boolean;
+    isOnlineOrdersStopped: boolean;
+    onlineOrdersStoppedMessage: string;
+    onlineOrdersCloseTimeOffset: number;
+}
+
 export class RestaurantDTO implements IRestaurantCoreInfo {
     public id: string = '';
     public parentId: string = '';

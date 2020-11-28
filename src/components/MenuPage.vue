@@ -103,7 +103,7 @@ import { OrderProcessor } from '@/dinesync/ordermanagement/OrderProcessor';
 import { NumUtility, StringUtility, GUID } from '@/next-ux2/utility';
 import { ObjectHelper } from '@/dinesync/dto/utility/ObjectHelper';
 import { MenuHelper } from '@/dinesync/dto/utility/MenuHelper';
-import { IRestaurantInfo } from '@/common/IRestaurantInfo';
+import { IRestaurantInfo } from '@/dinesync/dto/RestaurantDTO';
 import { hPlacement, vPlacement } from '@/next-ux2/utility/point-interface';
 
 
@@ -166,7 +166,11 @@ export default defineComponent({
             name: '',
             defaultTaxRate: 0,
             defaultMenuName: '',
-            onlineSurcharge: 0
+            onlineSurcharge: 0,
+            isOnlineOrdersStopped: false,
+            onlineOrdersStoppedMessage: '',
+            hasOnlineOrders: true,
+            onlineOrdersCloseTimeOffset: 0
         });
         const selectedMenu = ref(null as unknown as MenuDTO);
         const order = ref(null as unknown as OrderDTO);

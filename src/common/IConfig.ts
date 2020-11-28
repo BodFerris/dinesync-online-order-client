@@ -1,3 +1,4 @@
 export interface IConfig {
-    stripeKey: string
+    stripeKey: string,
+    dinesyncEndpoint: string
 }

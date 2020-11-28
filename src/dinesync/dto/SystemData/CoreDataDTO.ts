@@ -5,10 +5,10 @@ import { FloorItemDTO } from '../FloorplanDTO';
 import { InventoryItem } from '../MenuDTO';
 
 export class CoreDataDTO {
-    restaurantOwner: RestaurantOwnerDTO;
-    restaurantSite: RestaurantSiteDTO;
-    posDevice: PosDeviceDTO;
-    floorLayoutList: Array<FloorItemDTO>;
-    inventoryList: Array<InventoryItem>;
+    restaurantOwner: RestaurantOwnerDTO | null = null;
+    restaurantSite: RestaurantSiteDTO | null = null;
+    posDevice: PosDeviceDTO | null = null;
+    floorLayoutList: Array<FloorItemDTO> | null = null;
+    inventoryList: Array<InventoryItem> | null = null;
     typeName: string = 'CoreDataDTO';
 }

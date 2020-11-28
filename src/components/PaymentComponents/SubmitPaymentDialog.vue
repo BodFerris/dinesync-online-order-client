@@ -52,12 +52,13 @@ import ModalDialog, { IModalDialog } from "@/next-ux2/components/dialogs/modal-d
 import { computed, defineComponent, onMounted, ref } from 'vue';
 
 import { IConfig } from '@/common/IConfig';
-import { IRestaurantInfo } from '@/common/IRestaurantInfo';
+import { IRestaurantInfo } from '@/dinesync/dto/RestaurantDTO';
 import { createPaymentIntent } from "@/payments/stripe-processor";
 import { OrderDTO } from '@/dinesync/dto/OrderDTO';
 import { NumUtility, StringUtility } from '@/next-ux2/utility';
 import { OrderHelper } from '@/dinesync/dto/utility/OrderHelper';
 import { DataManager } from '@/DataManager';
+import { OrderManager } from '@/payments/order-manager';
 
 declare var AppConfig: IConfig;
 
@@ -114,8 +115,15 @@ async function intializePaymentButton(
     let canMakePaymentResult = await paymentRequest.canMakePayment();
     if (canMakePaymentResult) {
         payButton.mount(paymentButtonHost);
-        paymentRequest.on('paymentmethod', async (eventInfo: any) => {
+        paymentRequest.on('paymentmethod', async (eventInfo) => {
             try {
+                var validateOrderResult = await OrderManager.validateOrder(order);
+                if (!StringUtility.isNullOrEmpty(validateOrderResult)) {
+                    setStatusMessage(statusHostElement,  'Payment failed with order validation. ' + validateOrderResult);
+                    eventInfo.complete('fail');
+                    return;
+                }
+
                 var clientSecret = await createPaymentIntent(grandTotalCharge, order.id, order.groupList[0].id);
                 if (StringUtility.isNullOrEmpty(clientSecret)) {
                     setStatusMessage(statusHostElement,  'Payment failed.  Problems contacting the server.');
@@ -124,7 +132,7 @@ async function intializePaymentButton(
                 else {
                     var confirmResult = await stripe.confirmCardPayment(
                         clientSecret, {payment_method: eventInfo.paymentMethod.id}, {handleActions: false});
-
+                        
                     if (confirmResult.error) {
                         let errorMessage = confirmResult.error.message;
                         if (StringUtility.isNullOrEmpty(errorMessage)) {

@@ -1,4 +1,7 @@
+import { IConfig } from '@/common/IConfig';
 import { StringUtility } from '@/next-ux2/utility';
+
+declare var AppConfig: IConfig;
 
 export async function createPaymentIntent(amount: number, orderId: string, ticketId: string): Promise<string> {
     let formData = new FormData();
@@ -6,9 +9,8 @@ export async function createPaymentIntent(amount: number, orderId: string, ticke
     formData.append('orderId', orderId);
     formData.append('ticketId', ticketId);
 
-    //let baseUrl = 'localhost:44354';
-    let baseUrl = 'seattleservice.dinesync.com';
-    let endpoint = `https://${baseUrl}/api/Payment/CreatePaymentIntent`;
+    let baseUrl = AppConfig.dinesyncEndpoint;
+    let endpoint = `${baseUrl}/api/Payment/CreatePaymentIntent`;
     let result = await fetch(endpoint, {
         method: 'POST',
         cache: 'reload',

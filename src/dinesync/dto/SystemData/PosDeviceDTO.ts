@@ -16,8 +16,8 @@ export class PosDeviceDTO {
     public id: string = '';
     public parentId: string = '';
     public restaurantOwnerId: string = '';
-    public cashDrawer: CashDrawerDTO = null;
-    public settings: PosDeviceSettingsDTO = null;
+    public cashDrawer: CashDrawerDTO | null = null;
+    public settings: PosDeviceSettingsDTO | null = null;
 
     public lastModified = 0;
     public typeName: string = 'PosDeviceDTO';

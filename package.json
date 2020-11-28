@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "build-dev": "vue-cli-service build --mode development --no-clean"
+    "build": "vue-cli-service build --modern",
+    "build-dev": "vue-cli-service build --modern --mode development --no-clean"
   },
   "dependencies": {
     "mitt": "^2.1.0",
