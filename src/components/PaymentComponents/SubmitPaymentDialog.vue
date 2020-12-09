@@ -53,8 +53,8 @@ import { computed, defineComponent, onMounted, ref } from 'vue';
 
 import { IConfig } from '@/common/IConfig';
 import { IRestaurantInfo } from '@/dinesync/dto/RestaurantDTO';
-import { createPaymentIntent } from "@/payments/stripe-processor";
-import { OrderDTO } from '@/dinesync/dto/OrderDTO';
+import { convertProcessorCardTypeToSystem, createPaymentIntent, creatExpString } from "@/payments/stripe-processor";
+import { IOnlineTransactionInfo, OrderDTO } from '@/dinesync/dto/OrderDTO';
 import { NumUtility, StringUtility } from '@/next-ux2/utility';
 import { OrderHelper } from '@/dinesync/dto/utility/OrderHelper';
 import { DataManager } from '@/DataManager';
@@ -97,7 +97,6 @@ async function intializePaymentButton(
     let stripe = Stripe(AppConfig.stripeKey);
 
     let grandTotalCharge = getGrandTotalToCharge(order, restaurantInfo.onlineSurcharge);
-
     let paymentRequest = stripe.paymentRequest({
         country: 'US',
         currency: 'usd',
@@ -117,21 +116,38 @@ async function intializePaymentButton(
         payButton.mount(paymentButtonHost);
         paymentRequest.on('paymentmethod', async (eventInfo) => {
             try {
-                var validateOrderResult = await OrderManager.validateOrder(order);
-                if (!StringUtility.isNullOrEmpty(validateOrderResult)) {
-                    setStatusMessage(statusHostElement,  'Payment failed with order validation. ' + validateOrderResult);
+                // validate that the order price and menu items matches the official menu
+                let validateOrderResult = await OrderManager.validateOrder(order);
+                if (!validateOrderResult.isValid) {
+                    setStatusMessage(statusHostElement,  'Payment failed with order validation. ' + validateOrderResult.failureReason);
                     eventInfo.complete('fail');
                     return;
                 }
 
+                // stripe payment intent
                 var clientSecret = await createPaymentIntent(grandTotalCharge, order.id, order.groupList[0].id);
                 if (StringUtility.isNullOrEmpty(clientSecret)) {
                     setStatusMessage(statusHostElement,  'Payment failed.  Problems contacting the server.');
                     eventInfo.complete('fail');
+                    return;
                 }
                 else {
-                    var confirmResult = await stripe.confirmCardPayment(
+                    // stripe payment
+                    let confirmResult = await stripe.confirmCardPayment(
                         clientSecret, {payment_method: eventInfo.paymentMethod.id}, {handleActions: false});
+
+                    // create transaction info
+                    let transactionInfo = {
+                        transactionId: confirmResult.paymentIntent?.id,
+                        transactionId2: eventInfo.paymentMethod.id,
+                        transactionId3: '',
+                        transactionTimestamp: eventInfo.paymentMethod.created*1000,
+                        chargeAmount: (confirmResult.paymentIntent?.amount ?? 0)/100,
+                        name: eventInfo.paymentMethod.billing_details.name ?? '',
+                        creditType: convertProcessorCardTypeToSystem(eventInfo.paymentMethod.card?.brand),
+                        lastFour: eventInfo.paymentMethod.card?.last4 ?? '',
+                        cardExp: creatExpString(eventInfo.paymentMethod.card?.exp_month.toString() ?? '', eventInfo.paymentMethod.card?.exp_year.toString() ?? '')
+                    } as IOnlineTransactionInfo
                         
                     if (confirmResult.error) {
                         let errorMessage = confirmResult.error.message;
@@ -144,8 +160,27 @@ async function intializePaymentButton(
                     }
                     else {
                         eventInfo.complete('success');
+
+                        // send the order to the resturant
+                        try {
+                            let errorMessage = await OrderManager.captureOrder(order, transactionInfo, validateOrderResult.signature, validateOrderResult.deviceName);
+                            if (!StringUtility.isNullOrEmpty(errorMessage)) {
+                                throw new Error(errorMessage);
+                            }
+                            
+                        }
+                        catch (errorInfo) {
+                            // this is  tricky situation, the payment has been charged,
+                            // but there was an error when trying to capture the order
+                            // at the restaurant; need to inform the client, perhaps
+                            // via email or text that they need to call the restaurant
+                            // to confirm their order
+                            throw new Error('Not Implemented: need to add feature to email or text if order failed');
+                        }
+
                         if (confirmResult.paymentIntent?.status === 'requires_action') {
                             let stripeConfirmResult = await stripe.confirmCardPayment(clientSecret);
+                            stripeConfirmResult.paymentIntent
                             if (stripeConfirmResult.error) {
                                 setStatusMessage(statusHostElement,  'Payment failed.  Try using a different card.');
                             }
@@ -161,6 +196,7 @@ async function intializePaymentButton(
             }
             catch (errorInfo) {
                 setStatusMessage(statusHostElement,  'Payment failed.  ' + errorInfo.message);
+                eventInfo.complete('fail');
             }
 
         });

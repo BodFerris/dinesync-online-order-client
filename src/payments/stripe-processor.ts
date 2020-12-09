@@ -27,5 +27,29 @@ export async function createPaymentIntent(amount: number, orderId: string, ticke
         }
         throw new Error(errorMessage);
     }
+}
 
+export function convertProcessorCardTypeToSystem(processorCardType: string | undefined): string {
+    switch (processorCardType) {
+        case 'visa':
+            return 'Visa';
+        case 'discover':
+            return 'Discover';
+        case 'diners_club':
+            return 'Diners';
+        case 'jcb':
+            return 'JCB';
+        case 'mastercard':
+            return 'MC';
+        default:
+            return 'Other';
+    }
+}
+
+export function creatExpString(expMonth: string, expYear: string): string {
+
+    let expMonthNormalized = '0' + expMonth;
+    expMonth = expMonthNormalized.substr(expMonthNormalized.length - 2);
+
+    return expMonthNormalized + '/' + expYear;
 }

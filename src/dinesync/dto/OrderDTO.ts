@@ -199,6 +199,26 @@ export interface ITransactionBase {
     paymentEndpoint: string;
 }
 
+export interface IOnlineTransactionInfo {
+    transactionId: string;
+    transactionId2: string;
+    transactionId3: string;
+    transactionTimestamp: number;
+    chargeAmount: number;
+    name: string;
+    creditType: string;
+    lastFour: string,
+    cardExp: string
+}
+
+export interface IOnlineValidationResult
+{
+    isValid: boolean;
+    failureReason: string;
+    deviceName: string;
+    signature: string;
+}
+
 export interface ICardTransaction extends ITransactionBase {
     parentId: string;
     batchId: string;
