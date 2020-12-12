@@ -493,7 +493,7 @@ export class MenuHelper {
             returnValue.reasonForUnavailability = menu.reasonForUnavailability
         }
         else if (!MenuHelper.isMenuAvailableForTime(Date.now(), menu)) {
-            returnValue.reasonForUnavailability = 'Menu not availabe at curren time';
+            returnValue.reasonForUnavailability = 'Menu not availabe at current time';
         }
         else {
             returnValue.isAvailable = true;

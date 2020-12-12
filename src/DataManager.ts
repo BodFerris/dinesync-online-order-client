@@ -2,8 +2,16 @@ import { CategoryDTO, InventoryItem, MenuDTO, MenuItemDTO } from './dinesync/dto
 import { MenuHelper } from './dinesync/dto/utility/MenuHelper';
 
 export class DataManager {
+    //https://localhost:44354/api/RestaurantClient/OnlineData/asdfasdf/ddd
+    static restaurantId = '475cd90c-d11b-4351-8a25-d836984c1796';
+    static onlineDataEndpoint = "https://localhost:44354/";
+
     static async fetchMenuData(): Promise<Array<MenuDTO>> {
-        var fetchResult = await fetch('menuTestData.json');
+        let endPoint = DataManager.onlineDataEndpoint + `api/RestaurantClient/OnlineData/${DataManager.restaurantId}/menus.json`;
+        var fetchResult = await fetch(endPoint, {
+            method: 'GET',
+            cache: 'reload'
+        });
         if (fetchResult.ok) {
             let menuList =  JSON.parse(await fetchResult.text()) as Array<MenuDTO>;
 
@@ -47,7 +55,12 @@ export class DataManager {
     }
 
     static async fetchRestaurantData(): Promise<any> {
-        var fetchResult = await fetch('restaurantInfo.json');
+        let endPoint = DataManager.onlineDataEndpoint + `api/RestaurantClient/OnlineData/${DataManager.restaurantId}/restaurantInfo.json`;
+        var fetchResult = await fetch(endPoint, {
+            method: 'GET',
+            cache: 'reload'
+        });
+
         if (fetchResult.ok) {
             return JSON.parse(await fetchResult.text());
         }
@@ -57,7 +70,12 @@ export class DataManager {
     }
 
     static async fetchLiquorList(): Promise<Array<InventoryItem>> {
-        var fetchResult = await fetch('liquorList.json');
+        let endPoint = DataManager.onlineDataEndpoint + `api/RestaurantClient/OnlineData/${DataManager.restaurantId}/liquorList.json`;
+        var fetchResult = await fetch(endPoint, {
+            method: 'GET',
+            cache: 'reload'
+        });
+
         if (fetchResult.ok) {
             return JSON.parse(await fetchResult.text());
         }

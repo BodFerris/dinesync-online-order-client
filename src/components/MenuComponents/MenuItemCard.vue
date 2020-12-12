@@ -4,13 +4,15 @@
         <div class="menuItemHeadingContainer">
             <div class="menuItemHeading">
                 <div>{{ menuItem.name }}</div>
-                <div v-if="menuItem.priceList.length <= 2">{{ toCondensedPriceListText(menuItem.priceList) }}</div>
+                 <template v-if="menuItem.priceList.length < 3">
+                    <div v-if="menuItem.priceList.length <= 2">{{ toCondensedPriceListText(menuItem.priceList) }}</div>
+                </template>
+                <template v-else>
+                    <div  v-for="priceItem in menuItem.priceList" :key="priceItem.size" class="menuItemPriceListContainer">
+                        <div><span class="menuItemSizeLabel" v-if="!isStringEmpty(priceItem.size)">{{ priceItem.size }}</span>${{ toPriceText(priceItem.price) }}</div>
+                    </div>
+                </template>
             </div>
-            <template v-if="menuItem.priceList.length > 2">
-                <div  v-for="priceItem in menuItem.priceList" :key="priceItem.size" class="menuItemPriceListContainer">
-                    <div><span class="menuItemSizeLabel" v-if="!isStringEmpty(priceItem.size)">{{ priceItem.size }}</span>${{ toPriceText(priceItem.price) }}</div>
-                </div>
-            </template>
         </div>
         
         <div class="menuItemDescription">{{ menuItem.description }}</div>
