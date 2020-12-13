@@ -208,7 +208,9 @@ export interface IOnlineTransactionInfo {
     name: string;
     creditType: string;
     lastFour: string,
-    cardExp: string
+    cardExp: string,
+    sendToEmail: string,
+    textPhoneNumber: string
 }
 
 export interface IOnlineValidationResult

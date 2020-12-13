@@ -52,7 +52,7 @@
                 <div class="orderContainerFooter" v-if="ticket && ticket.menuItemList.length > 0">
                     <div class="menuItemRow">
                         <div>Subtotal</div>
-                        <div>{{ order.totalPrice }}</div>
+                        <div>{{ toPriceText(order.totalPrice) }}</div>
                     </div>
                     <div class="menuItemRow">
                         <div>Tax</div>

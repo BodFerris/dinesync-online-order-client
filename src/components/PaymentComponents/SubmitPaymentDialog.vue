@@ -28,7 +28,7 @@
                     <div class="price">Carry-Out</div>
                 </div>
                 <label class="nux-labelVertical">phone number or email</label>
-                <input type="text" class="nux-textBox" style="width: 100%;" />
+                <input ref="phoneOrEmailTextBox" type="text" class="nux-textBox" style="width: 100%;" />
 
                 
                 <div ref="statusContainer" class="statusContainer">
@@ -90,6 +90,7 @@ function toPriceText(value: number): string {
 async function intializePaymentButton(
         paymentButtonHost: HTMLElement, 
         statusHostElement: HTMLElement,
+        phoneOrEmailTextBox: HTMLInputElement,
         restaurantInfo: IRestaurantInfo, 
         order: OrderDTO,
         paymentSuccesfullyCompletedCallback: ()=> void): Promise<boolean> {
@@ -146,7 +147,8 @@ async function intializePaymentButton(
                         name: eventInfo.paymentMethod.billing_details.name ?? '',
                         creditType: convertProcessorCardTypeToSystem(eventInfo.paymentMethod.card?.brand),
                         lastFour: eventInfo.paymentMethod.card?.last4 ?? '',
-                        cardExp: creatExpString(eventInfo.paymentMethod.card?.exp_month.toString() ?? '', eventInfo.paymentMethod.card?.exp_year.toString() ?? '')
+                        cardExp: creatExpString(eventInfo.paymentMethod.card?.exp_month.toString() ?? '', eventInfo.paymentMethod.card?.exp_year.toString() ?? ''),
+                        sendToEmail: phoneOrEmailTextBox.value
                     } as IOnlineTransactionInfo
                         
                     if (confirmResult.error) {
@@ -227,6 +229,7 @@ export default defineComponent({
         const dialog = ref(null as unknown as IModalDialog);
         const statusContainer = ref(null as unknown as HTMLElement);
         const paymentRequestButton = ref(null as unknown as HTMLDivElement);
+        const phoneOrEmailTextBox = ref(null as unknown as HTMLInputElement);
 
         const hide = async (isPaymentSucessful: boolean) => {
             if (isPaymentSucessful) {
@@ -245,6 +248,7 @@ export default defineComponent({
             let wasButtonCreated = await intializePaymentButton(
                 paymentRequestButton.value, 
                 statusContainer.value,
+                phoneOrEmailTextBox.value,
                 props.restaurantInfo as IRestaurantInfo,
                 props.order as OrderDTO, 
                 () => { hide(true); });
@@ -310,6 +314,7 @@ export default defineComponent({
         return {
             dialog,
             statusContainer,
+            phoneOrEmailTextBox,
             paymentRequestButton,
 
             onlineSurcharge,
