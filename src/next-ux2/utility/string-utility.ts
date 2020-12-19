@@ -98,6 +98,30 @@ export class StringUtility {
         return '';
     }
 
+    public static getPhoneNumberData(phoneNumber: string): {countryCode: number, areaCode: number, localNumber: number } {
+        let returnValue= {
+            countryCode: 1,
+            areaCode: 0,
+            localNumber: 0
+        };
+
+        let digits = phoneNumber.replace(/\D+/g, '');
+        if (digits.length >= 7) {
+            // work backwords, there are 7 digits for a local number
+            returnValue.localNumber = parseInt(digits.substr(digits.length - 7));
+        }
+
+        if (digits.length >= 10) {
+            returnValue.areaCode = parseInt(digits.substr(digits.length - 10, 3));
+        }
+
+        if (digits.length > 10) {
+            returnValue.countryCode = parseInt(digits.substr(0, digits.length - 10));
+        }
+
+        return returnValue;
+    }
+
     public static toInt16Array(text: string): Int16Array {
         let returnValue = new Int16Array(text.length);
         for (let i = 0; i < text.length; i++) {

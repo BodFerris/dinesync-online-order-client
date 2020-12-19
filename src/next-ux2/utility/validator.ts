@@ -4,8 +4,13 @@ export class Validator {
         return regExp.test(value);
     }
 
-    public static isPhoneNumber(value: string): boolean {
-        let regExp = /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/;
+    public static isPhoneNumber(value: string, isAreaCodeRequired=false): boolean {
+        //let regExp = /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/;
+        let regExp =/([+]?\d{1,2}[.-\s]?)?(\(?\d{3}\)?[.-\s]?)?(\d{3}[.-\s]?)\d{4}/g;
+        if (isAreaCodeRequired) {
+            regExp =/([+]?\d{1,2}[.-\s]?)?(\(?\d{3}\)?[.-\s]?)(\d{3}[.-\s]?)\d{4}/g;
+        }
+
         return regExp.test(value);
     }
 

@@ -42,7 +42,12 @@
             <button class="nux-flatButton" @click="hide(false)" >Exit</button>
         </template>
     </ModalDialog>
-    
+
+    <SimpleDialog ref="messageDialog">
+        <div ref="messageDialogContent" style="font-size: 1.5rem; font-weight: 600">
+        </div>
+    </SimpleDialog>
+
 </template>
 
 <script lang="ts">
@@ -55,10 +60,11 @@ import { IConfig } from '@/common/IConfig';
 import { IRestaurantInfo } from '@/dinesync/dto/RestaurantDTO';
 import { convertProcessorCardTypeToSystem, createPaymentIntent, creatExpString } from "@/payments/stripe-processor";
 import { IOnlineTransactionInfo, OrderDTO } from '@/dinesync/dto/OrderDTO';
-import { NumUtility, StringUtility } from '@/next-ux2/utility';
+import { NumUtility, StringUtility, Validator } from '@/next-ux2/utility';
 import { OrderHelper } from '@/dinesync/dto/utility/OrderHelper';
 import { DataManager } from '@/DataManager';
 import { OrderManager } from '@/payments/order-manager';
+import { hPlacement, vPlacement } from "@/next-ux2/utility/point-interface";
 
 declare var AppConfig: IConfig;
 
@@ -93,7 +99,8 @@ async function intializePaymentButton(
         phoneOrEmailTextBox: HTMLInputElement,
         restaurantInfo: IRestaurantInfo, 
         order: OrderDTO,
-        paymentSuccesfullyCompletedCallback: ()=> void): Promise<boolean> {
+        paymentSuccesfullyCompletedCallback: ()=> void,
+        isDataValid: () => boolean): Promise<boolean> {
 
     let stripe = Stripe(AppConfig.stripeKey);
 
@@ -115,6 +122,13 @@ async function intializePaymentButton(
     let canMakePaymentResult = await paymentRequest.canMakePayment();
     if (canMakePaymentResult) {
         payButton.mount(paymentButtonHost);
+        payButton.on('click', (clickEventInfo) => {
+            if (!isDataValid()) {
+                clickEventInfo.preventDefault();
+                return;
+            }
+        });
+
         paymentRequest.on('paymentmethod', async (eventInfo) => {
             try {
                 // validate that the order price and menu items matches the official menu
@@ -227,9 +241,37 @@ export default defineComponent({
 
         // template refs
         const dialog = ref(null as unknown as IModalDialog);
+        const messageDialog = ref(null as unknown as ISimpleDialog);
+        const messageDialogContent = ref(null as unknown as HTMLElement);
         const statusContainer = ref(null as unknown as HTMLElement);
         const paymentRequestButton = ref(null as unknown as HTMLDivElement);
         const phoneOrEmailTextBox = ref(null as unknown as HTMLInputElement);
+
+        const isDataValid = (): boolean => {
+            let errorMessage = '';
+            
+            let phoneOrEmailValue = phoneOrEmailTextBox.value.value.trim();
+            if (phoneOrEmailValue === '') {
+                errorMessage += 'Need a phone or email. ';
+            }
+            else {
+                // the value must be a phone numbe or an email address
+                if (!Validator.isPhoneNumber(phoneOrEmailValue, false) && !Validator.isEmail(phoneOrEmailValue)) {
+                    errorMessage += 'Requires a valid phone number or email address.  Phone numbers require area code. ';
+                }
+                else if (!Validator.isEmail(phoneOrEmailValue)
+                        && !Validator.isPhoneNumber(phoneOrEmailValue, true)
+                        && Validator.isPhoneNumber(phoneOrEmailValue, false)) {
+                    errorMessage += 'Phone number requires area code.  ';
+                }
+            }
+
+            if (errorMessage !== '') {
+                showMessage(errorMessage, phoneOrEmailTextBox.value);
+            }
+
+            return errorMessage === '';
+        }
 
         const hide = async (isPaymentSucessful: boolean) => {
             if (isPaymentSucessful) {
@@ -238,7 +280,6 @@ export default defineComponent({
             else {
                 dialog.value.hide('cancel');
             }
-             
         }
 
         const show = async () => {
@@ -251,7 +292,8 @@ export default defineComponent({
                 phoneOrEmailTextBox.value,
                 props.restaurantInfo as IRestaurantInfo,
                 props.order as OrderDTO, 
-                () => { hide(true); });
+                () => { hide(true); },
+                isDataValid);
                 
             if (!wasButtonCreated) {
                 setStatusMessage(statusContainer.value, 'System does not support Apple, Google, or Microsoft Pay.');
@@ -260,6 +302,20 @@ export default defineComponent({
             let result = await waitForDialogToClosePromise;
             return result;
         };
+
+        
+        const showMessage = (message: string, anchorElement?: HTMLElement) => {
+            let horizPos: hPlacement = 'center';
+            let vertPos: vPlacement = 'bottom'
+
+            if (!anchorElement) {
+                anchorElement = document.body;
+                vertPos = 'center';
+            }
+
+            messageDialogContent.value.innerHTML = message;
+            messageDialog.value.show(anchorElement, horizPos, vertPos);
+        }
 
         const onlineSurcharge = computed((): number => {
             let restaurantInfo = props.restaurantInfo as IRestaurantInfo;
@@ -313,6 +369,8 @@ export default defineComponent({
 
         return {
             dialog,
+            messageDialog,
+            messageDialogContent,
             statusContainer,
             phoneOrEmailTextBox,
             paymentRequestButton,
