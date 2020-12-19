@@ -93,6 +93,13 @@ function toPriceText(value: number): string {
     }
 }
 
+interface IValidatedData {
+    isValid: boolean;
+    errorReason: string;
+    phoneNumber: string; 
+    email: string
+}
+
 async function intializePaymentButton(
         paymentButtonHost: HTMLElement, 
         statusHostElement: HTMLElement,
@@ -100,7 +107,7 @@ async function intializePaymentButton(
         restaurantInfo: IRestaurantInfo, 
         order: OrderDTO,
         paymentSuccesfullyCompletedCallback: ()=> void,
-        isDataValid: () => boolean): Promise<boolean> {
+        validateData: () => IValidatedData): Promise<boolean> {
 
     let stripe = Stripe(AppConfig.stripeKey);
 
@@ -119,11 +126,14 @@ async function intializePaymentButton(
         paymentRequest: paymentRequest
     });
 
+    let validatedData: IValidatedData;
     let canMakePaymentResult = await paymentRequest.canMakePayment();
     if (canMakePaymentResult) {
         payButton.mount(paymentButtonHost);
+        
         payButton.on('click', (clickEventInfo) => {
-            if (!isDataValid()) {
+            validatedData = validateData();
+            if (!validatedData.isValid) {
                 clickEventInfo.preventDefault();
                 return;
             }
@@ -162,7 +172,8 @@ async function intializePaymentButton(
                         creditType: convertProcessorCardTypeToSystem(eventInfo.paymentMethod.card?.brand),
                         lastFour: eventInfo.paymentMethod.card?.last4 ?? '',
                         cardExp: creatExpString(eventInfo.paymentMethod.card?.exp_month.toString() ?? '', eventInfo.paymentMethod.card?.exp_year.toString() ?? ''),
-                        sendToEmail: phoneOrEmailTextBox.value
+                        sendToEmail: validatedData.email,
+                        textPhoneNumber: validatedData.phoneNumber
                     } as IOnlineTransactionInfo
                         
                     if (confirmResult.error) {
@@ -247,8 +258,17 @@ export default defineComponent({
         const paymentRequestButton = ref(null as unknown as HTMLDivElement);
         const phoneOrEmailTextBox = ref(null as unknown as HTMLInputElement);
 
-        const isDataValid = (): boolean => {
+        const validateData = (): IValidatedData => {
+            let returnValue = {
+                isValid: false,
+                errorReason: '',
+                phoneNumber: '',
+                email: ''
+            } as IValidatedData;
+
             let errorMessage = '';
+            let phoneNumber = '';
+            let email = '';
             
             let phoneOrEmailValue = phoneOrEmailTextBox.value.value.trim();
             if (phoneOrEmailValue === '') {
@@ -264,13 +284,22 @@ export default defineComponent({
                         && Validator.isPhoneNumber(phoneOrEmailValue, false)) {
                     errorMessage += 'Phone number requires area code.  ';
                 }
+                else {
+                    email = (Validator.isEmail(phoneOrEmailValue)) ? phoneOrEmailValue : '';
+                    phoneNumber = (Validator.isPhoneNumber(phoneOrEmailValue, true)) ? phoneOrEmailValue : '';
+                }
             }
+
+            returnValue.isValid = errorMessage === '';
+            returnValue.errorReason = errorMessage;
+            returnValue.phoneNumber = phoneNumber;
+            returnValue.email = email;
 
             if (errorMessage !== '') {
                 showMessage(errorMessage, phoneOrEmailTextBox.value);
             }
 
-            return errorMessage === '';
+            return returnValue
         }
 
         const hide = async (isPaymentSucessful: boolean) => {
@@ -293,7 +322,7 @@ export default defineComponent({
                 props.restaurantInfo as IRestaurantInfo,
                 props.order as OrderDTO, 
                 () => { hide(true); },
-                isDataValid);
+                validateData);
                 
             if (!wasButtonCreated) {
                 setStatusMessage(statusContainer.value, 'System does not support Apple, Google, or Microsoft Pay.');
