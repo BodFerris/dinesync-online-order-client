@@ -48,6 +48,7 @@ export class OrderManager {
         formData.append('restaurantId', order.parentId);
         formData.append('deviceId', deviceId);
         formData.append('signature', orderSignature);
+        formData.append('orderId', order.id);
         formData.append('orderJsonText', JSON.stringify(order));
         formData.append('transactionInfoJsonText', JSON.stringify(transactionInfo));
 
