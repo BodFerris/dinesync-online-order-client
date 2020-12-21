@@ -69,6 +69,10 @@ import { hPlacement, vPlacement } from "@/next-ux2/utility/point-interface";
 declare var AppConfig: IConfig;
 
 function setStatusMessage(hostElement: HTMLElement, statusMessage: string) {
+    if (statusMessage.length > 200) {
+        statusMessage = statusMessage.substring(0, 200) + '...';
+    }
+
     hostElement.textContent = statusMessage;
 }
 
@@ -138,6 +142,10 @@ async function intializePaymentButton(
                 return;
             }
         });
+        
+        paymentRequest.on('cancel', () => {
+            console.log('cancelled');
+        });
 
         paymentRequest.on('paymentmethod', async (eventInfo) => {
             try {
@@ -161,32 +169,34 @@ async function intializePaymentButton(
                     let confirmResult = await stripe.confirmCardPayment(
                         clientSecret, {payment_method: eventInfo.paymentMethod.id}, {handleActions: false});
 
-                    // create transaction info
-                    let transactionInfo = {
-                        transactionId: confirmResult.paymentIntent?.id,
-                        transactionId2: eventInfo.paymentMethod.id,
-                        transactionId3: '',
-                        transactionTimestamp: eventInfo.paymentMethod.created*1000,
-                        chargeAmount: (confirmResult.paymentIntent?.amount ?? 0)/100,
-                        name: eventInfo.paymentMethod.billing_details.name ?? '',
-                        creditType: convertProcessorCardTypeToSystem(eventInfo.paymentMethod.card?.brand),
-                        lastFour: eventInfo.paymentMethod.card?.last4 ?? '',
-                        cardExp: creatExpString(eventInfo.paymentMethod.card?.exp_month.toString() ?? '', eventInfo.paymentMethod.card?.exp_year.toString() ?? ''),
-                        sendToEmail: validatedData.email,
-                        textPhoneNumber: validatedData.phoneNumber
-                    } as IOnlineTransactionInfo
                         
                     if (confirmResult.error) {
-                        let errorMessage = confirmResult.error.message;
+                        let errorMessage = confirmResult.error?.message;
                         if (StringUtility.isNullOrEmpty(errorMessage)) {
-                            errorMessage = ''
+                            errorMessage = 'An error occured while trying to process payment.';
                         }
 
                         setStatusMessage(statusHostElement,  'Payment failed.  ' + errorMessage);
                         eventInfo.complete('fail');
+                        return;
                     }
                     else {
                         eventInfo.complete('success');
+
+                        // create transaction info
+                        let transactionInfo = {
+                            transactionId: confirmResult.paymentIntent?.id,
+                            transactionId2: eventInfo.paymentMethod.id,
+                            transactionId3: '',
+                            transactionTimestamp: eventInfo.paymentMethod.created*1000,
+                            chargeAmount: (confirmResult.paymentIntent?.amount ?? 0)/100,
+                            name: eventInfo.paymentMethod.billing_details.name ?? '',
+                            creditType: convertProcessorCardTypeToSystem(eventInfo.paymentMethod.card?.brand),
+                            lastFour: eventInfo.paymentMethod.card?.last4 ?? '',
+                            cardExp: creatExpString(eventInfo.paymentMethod.card?.exp_month.toString() ?? '', eventInfo.paymentMethod.card?.exp_year.toString() ?? ''),
+                            sendToEmail: validatedData.email,
+                            textPhoneNumber: validatedData.phoneNumber
+                        } as IOnlineTransactionInfo
 
                         // send the order to the resturant
                         try {
