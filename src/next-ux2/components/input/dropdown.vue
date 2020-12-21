@@ -127,10 +127,6 @@ export default defineComponent({
             resetList,
             showDropdown
         };
-    },
-
-    methods: {
-        
     }
     
 });
