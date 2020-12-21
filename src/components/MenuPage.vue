@@ -78,6 +78,14 @@
             </div>
         </SimpleDialog>
 
+        <SimpleDialog ref="paymentAcceptedPopup">
+            <div v-if="lastOrder" class="paymentAcceptedPopup">
+                <div class="paymentAcceptedHeading">Order Sent to Restaurant</div>
+                <div>
+                    Payment ${{submittedOrderGrandTotal}} received for<br/>order id {{lastOrder.orderNumber}}
+                </div>
+            </div>
+        </SimpleDialog>
 
     </div>
 </template>
@@ -89,7 +97,7 @@ import DropdownFlyout, { IDropdownFlyout } from '@/next-ux2/components/container
 
 import SimpleDialog, {ISimpleDialog } from '@/next-ux2/components/dialogs/simple-dialog.vue';
 import { IModalDialog } from '@/next-ux2/components/dialogs/modal-dialog.vue';
-import SubmitPaymentDialog from "@/components/PaymentComponents/SubmitPaymentDialog.vue";
+import SubmitPaymentDialog, { getGrandTotalToCharge } from "@/components/PaymentComponents/SubmitPaymentDialog.vue";
 import OrderMenuItemDialog, { IOrderMenuItemDialog } from './MenuComponents/OrderMenuItemDialog.vue';
 
 import MenuItemCard from './MenuComponents/MenuItemCard.vue';
@@ -158,6 +166,7 @@ export default defineComponent({
         const menuDropdown = ref(null as unknown as IDropdownFlyout);
         const messageDialog = ref(null as unknown as ISimpleDialog);
         const messageDialogContent = ref(null as unknown as HTMLElement);
+        const paymentAcceptedPopup = ref(null as unknown as ISimpleDialog);
 
         // data
         const mainHeadingText = ref('');
@@ -174,6 +183,7 @@ export default defineComponent({
         });
         const selectedMenu = ref(null as unknown as MenuDTO);
         const order = ref(null as unknown as OrderDTO);
+        const lastOrder = ref(null as unknown as OrderDTO);
         const ticket = ref(null as unknown as OrderGroupDTO);
 
         // methods
@@ -226,10 +236,24 @@ export default defineComponent({
             selectedMenu.value = menuToUse;
         }
 
+        const submittedOrderGrandTotal = computed((): string => {
+            if (lastOrder.value) {
+                let grandTotal = getGrandTotalToCharge(lastOrder.value, restaurantInfo.value.onlineSurcharge);
+                return StringUtility.toPriceText(grandTotal);
+            }
+            else {
+                return '0.00';
+            }
+        });
+
         const submitOrder = async () => {
             let result = await submitPaymentDialog.value.show();
             if (result === 'ok') {
-                showMessage('Payment accepted.');
+                lastOrder.value = ObjectHelper.cleanDto(order.value);
+                paymentAcceptedPopup.value.show(document.body, 'center', 'center');
+
+                order.value = createNewOrder(selectedMenu.value.parentId);
+                ticket.value = order.value.groupList[0];
             }
         }
 
@@ -284,17 +308,20 @@ export default defineComponent({
             menuNameContainer,
             messageDialog,
             messageDialogContent,
+            paymentAcceptedPopup,
 
             menuList,
             selectedMenu,
             order,
+            lastOrder,
             ticket,
             mainHeadingText,
             restaurantInfo,
-            
+
             toMoney: NumUtility.toMoney,
             toPriceText: StringUtility.toPriceText,
             getMenuItemPriceNoOptions,
+            submittedOrderGrandTotal,
 
             showMenuDropdown,
             changeMenu,
@@ -470,6 +497,18 @@ button.checkoutButton {
 
 button.checkoutButton:active {
     background-color: var(--var-primaryVar3-color);
+}
+
+.paymentAcceptedPopup {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.7rem;
+}
+
+.paymentAcceptedHeading {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
 }
 
 </style>

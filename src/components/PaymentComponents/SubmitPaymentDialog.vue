@@ -30,12 +30,11 @@
                 <label class="nux-labelVertical">phone number or email</label>
                 <input ref="phoneOrEmailTextBox" type="text" class="nux-textBox" style="width: 100%;" />
 
-                
                 <div ref="statusContainer" class="statusContainer">
 
                 </div>
 
-<div ref="paymentRequestButton"></div>
+                <div ref="paymentRequestButton"></div>
             </div>
         </template>
         <template v-slot:footer>
@@ -76,7 +75,7 @@ function setStatusMessage(hostElement: HTMLElement, statusMessage: string) {
     hostElement.textContent = statusMessage;
 }
 
-function getGrandTotalToCharge(order: OrderDTO, onlineSurcharge: number): number {
+export function getGrandTotalToCharge(order: OrderDTO, onlineSurcharge: number): number {
     if (!onlineSurcharge) {
         onlineSurcharge = 0;
     }
@@ -489,4 +488,5 @@ export default defineComponent({
 
     font-size: 1.5rem;
 }
+
 </style>
