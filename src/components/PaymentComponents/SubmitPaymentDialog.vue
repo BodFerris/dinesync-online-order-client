@@ -96,11 +96,22 @@ function toPriceText(value: number): string {
     }
 }
 
+
 interface IValidatedData {
     isValid: boolean;
     errorReason: string;
     phoneNumber: string; 
     email: string
+}
+
+var payButton: stripe.elements.Element;
+let stripe = Stripe(AppConfig.stripeKey);
+
+function cleanupPayment() {
+    if (payButton) {
+        payButton.unmount();
+        payButton.destroy();
+    }
 }
 
 async function intializePaymentButton(
@@ -112,7 +123,6 @@ async function intializePaymentButton(
         paymentSuccesfullyCompletedCallback: ()=> void,
         validateData: () => IValidatedData): Promise<boolean> {
 
-    let stripe = Stripe(AppConfig.stripeKey);
 
     let grandTotalCharge = getGrandTotalToCharge(order, restaurantInfo.onlineSurcharge);
     let paymentRequest = stripe.paymentRequest({
@@ -124,8 +134,9 @@ async function intializePaymentButton(
         }
     });
 
+
     let elements = stripe.elements();
-    let payButton = elements.create('paymentRequestButton', {
+    payButton = elements.create('paymentRequestButton', {
         paymentRequest: paymentRequest
     });
 
@@ -168,7 +179,6 @@ async function intializePaymentButton(
                     let confirmResult = await stripe.confirmCardPayment(
                         clientSecret, {payment_method: eventInfo.paymentMethod.id}, {handleActions: false});
 
-                        
                     if (confirmResult.error) {
                         let errorMessage = confirmResult.error?.message;
                         if (StringUtility.isNullOrEmpty(errorMessage)) {
@@ -318,6 +328,8 @@ export default defineComponent({
             else {
                 dialog.value.hide('cancel');
             }
+
+            cleanupPayment();
         }
 
         const show = async () => {
