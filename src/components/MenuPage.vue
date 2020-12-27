@@ -7,9 +7,23 @@
                     @click="showMenuDropdown()"><span>{{ selectedMenu.name }}<i class="material-icons" 
                         style="color: var(--var-primaryNeutralVar3-color);">arrow_drop_down</i></span></div>
             </div>
+
+            <button ref="headingButton" class="headingButton" @click="toggleOrderPanel()">
+                <div class="viewCartContainer">
+                    <template v-if="isOrderPanelOpened">
+                        <div class="iconContainer"><i class="material-icons">visibility_off</i></div>
+                        <div class="viewCartLabel">Hide Order</div>
+                    </template>
+                    <template v-else>
+                        <div class="iconContainer"><i class="material-icons">shopping_cart</i></div>
+                        <div class="viewCartLabel">View Order</div>
+                    </template>
+                </div>
+            </button>
+
         </header>
         <div class="splitContent">
-            <div class="menuContainer">
+            <div ref="menuContainer" class="menuContainer">
                 <template v-if="selectedMenu">
                     <div v-for="categoryItem in selectedMenu.categoryList" :key="categoryItem.id" style="margin-bottom: 3rem;">
                         <div style="font-size: 2.4rem; text-transform: uppercase; color: #0a2749; margin-bottom: 1.5rem; letter-spacing: 0.1rem;">{{ categoryItem.name }}</div>
@@ -22,7 +36,7 @@
                 </template>
             </div>
 
-            <div class="orderContainer">
+            <div class="orderContainer" ref="orderContainer">
                 <div class="orderContainerHeading majorHeadingText">Order</div>
                 <div class="orderContainerMenuItems">
                     <div v-if="!ticket || ticket.menuItemList.length == 0">Empty.  Select menu items from the left to add to the order.</div>
@@ -67,6 +81,15 @@
             </div>
         </div>
 
+        <div class="footer">
+            <div  v-if="!ticket || ticket.menuItemList.length == 0">
+                Empty Order
+            </div>
+            <div v-else>
+                <div>${{ toPriceText(toMoney(order.totalPrice + order.totalTax)) }}</div>
+            </div>
+        </div>
+
         <DropdownFlyout ref="menuDropdown"  width="30rem" textFieldName="name" @selected="changeMenu" />
 
         <OrderMenuItemDialog ref="orderMenuItemDialog" />
@@ -91,7 +114,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, nextTick, onMounted } from 'vue';
+import { defineComponent, ref, computed, nextTick, onMounted, onBeforeUnmount } from 'vue';
 
 import DropdownFlyout, { IDropdownFlyout } from '@/next-ux2/components/containers/dropdown-flyout.vue';
 
@@ -108,7 +131,7 @@ import { OrderHelper } from '@/dinesync/dto/utility/OrderHelper';
 import { DataManager } from '@/DataManager';
 import { OrderDTO, OrderStateEnum, OrderGroupDTO, OrderMenuItemDTO } from '@/dinesync/dto/OrderDTO';
 import { OrderProcessor } from '@/dinesync/ordermanagement/OrderProcessor';
-import { NumUtility, StringUtility, GUID } from '@/next-ux2/utility';
+import { NumUtility, StringUtility, GUID, HtmlUtility } from '@/next-ux2/utility';
 import { ObjectHelper } from '@/dinesync/dto/utility/ObjectHelper';
 import { MenuHelper } from '@/dinesync/dto/utility/MenuHelper';
 import { IRestaurantInfo } from '@/dinesync/dto/RestaurantDTO';
@@ -160,7 +183,10 @@ export default defineComponent({
         let liquorList = new Array<InventoryItem>();
 
         // template refs
+        const orderContainer = ref(null as unknown as HTMLElement);
+        const headingButton = ref(null as unknown as HTMLButtonElement);
         const menuNameContainer = ref(null as unknown as HTMLElement);
+        const menuContainer =ref(null as unknown as HTMLElement);
         const orderMenuItemDialog = ref(null as unknown as IOrderMenuItemDialog);
         const submitPaymentDialog = ref(null as unknown as IModalDialog);
         const menuDropdown = ref(null as unknown as IDropdownFlyout);
@@ -170,6 +196,7 @@ export default defineComponent({
 
         // data
         const mainHeadingText = ref('');
+        const isOrderPanelOpened = ref(false);
         const menuList = ref(new Array<MenuDTO>());
         const restaurantInfo = ref<IRestaurantInfo>( {
             name: '',
@@ -185,6 +212,35 @@ export default defineComponent({
         const order = ref(null as unknown as OrderDTO);
         const lastOrder = ref(null as unknown as OrderDTO);
         const ticket = ref(null as unknown as OrderGroupDTO);
+
+        const dismissOpenedOrderPanelBodyClickHandler = (eventInfo: MouseEvent) => {
+            if (isOrderPanelOpened.value &&
+                    !HtmlUtility.isPointInElementBounds(eventInfo.clientX, eventInfo.clientY, orderContainer.value) &&
+                    !HtmlUtility.isPointInElementBounds(eventInfo.clientX, eventInfo.clientY, headingButton.value)) {
+                hideOrderPanel();
+            }
+        };
+
+        const dismissOpenedOrderPanelBodySrollHandler = (eventInfo: Event) => {
+            if (isOrderPanelOpened.value) {
+                hideOrderPanel();
+            }
+        };
+
+        // media query hooks
+        const mediaQuery = window.matchMedia('(max-width: 750px');
+        const mediaQueryChangeHandler = () => {
+            if (window.innerWidth <= 750) {
+                hideOrderPanel();
+                document.body.addEventListener('click', dismissOpenedOrderPanelBodyClickHandler);
+            }
+            else {
+                orderContainer.value.classList.remove('showOrderContainerAnimation');
+                orderContainer.value.classList.remove('hideOrderContainerAnimation');
+                isOrderPanelOpened.value = true;
+                document.body.removeEventListener('click', dismissOpenedOrderPanelBodyClickHandler);
+            }
+        };
 
         // methods
         const addToOrder = async (menuItem: MenuItemDTO) => {
@@ -257,6 +313,29 @@ export default defineComponent({
             }
         }
 
+        const showOrderPanel = () => {
+                orderContainer.value.classList.add('showOrderContainerAnimation');
+                orderContainer.value.classList.remove('hideOrderContainerAnimation');
+                isOrderPanelOpened.value = true;
+                menuContainer.value.addEventListener('scroll', dismissOpenedOrderPanelBodySrollHandler);
+        }
+
+        const hideOrderPanel = () => {
+            orderContainer.value.classList.remove('showOrderContainerAnimation');
+            orderContainer.value.classList.add('hideOrderContainerAnimation');
+            isOrderPanelOpened.value = false;
+            menuContainer.value.removeEventListener('scroll', dismissOpenedOrderPanelBodySrollHandler);
+        }
+
+        const toggleOrderPanel = () => {
+            if (isOrderPanelOpened.value) {
+                hideOrderPanel();
+            }
+            else {
+                showOrderPanel();
+            }
+        }
+
         const showMessage = (message: string, anchorElement?: HTMLElement) => {
             let horizPos: hPlacement = 'center';
             let vertPos: vPlacement = 'bottom'
@@ -299,17 +378,30 @@ export default defineComponent({
 
         onMounted(() => {
             dataInitalizer();
+            mediaQuery.addEventListener('change', mediaQueryChangeHandler);
+
+            // when app first loads, there is no resize, so trigger the callback
+            // to get the initial value set
+            mediaQueryChangeHandler();
         });
 
+        onBeforeUnmount(() => {
+            mediaQuery.removeEventListener('change', mediaQueryChangeHandler);
+        });
+        
         return {
+            orderContainer,
+            headingButton,
             orderMenuItemDialog,
             submitPaymentDialog,
             menuDropdown,
+            menuContainer,
             menuNameContainer,
             messageDialog,
             messageDialogContent,
             paymentAcceptedPopup,
 
+            isOrderPanelOpened,
             menuList,
             selectedMenu,
             order,
@@ -328,7 +420,8 @@ export default defineComponent({
             addToOrder,
             editMenuItem,
             deleteMenuItem,
-            submitOrder
+            submitOrder,
+            toggleOrderPanel
         }
 
     }
@@ -378,6 +471,14 @@ export default defineComponent({
     color: var(--var-sideBarFont-color);
     font-size: 1.6rem;
     font-weight: 600;
+}
+
+.showOrderContainerAnimation {
+    animation-name: showOrderView
+}
+
+.hideOrderContainerAnimation {
+    animation-name: hideOrderView
 }
 
 .orderContainerHeading {
@@ -452,6 +553,22 @@ header {
     font-weight: 600;
 }
 
+.footer {
+    display: none;
+    flex: 0 0 auto;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0.5rem 2rem;
+    box-sizing: border-box;
+    font-size: 1.5rem;
+    font-weight: 600;
+
+    background-color: var(--var-primaryVar3-color);
+    color: var(--var-sideBarFont-color);
+}
+
 h1 {
     padding: 0;
     margin: 0;
@@ -510,5 +627,98 @@ button.checkoutButton:active {
     font-weight: 600;
     margin-bottom: 1rem;
 }
+
+button.headingButton {
+    display:none;
+    margin: 0;
+    margin-left: auto;
+    border-width: 0;
+    padding: 0;
+    width: 7.7rem;
+    height: 6.2rem;
+
+    color: var(--var-sideBarFont-color);
+    background-color: transparent;
+}
+
+button.headingButton .iconContainer {
+    border: 1px solid var(--var-sideBarFont-color);
+    border-radius: 100%;
+    width: 3.2rem;
+    height: 3.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button.headingButton .iconContainer .material-icons {
+    font-size: 1.8rem;
+}
+
+button.headingButton:active {
+    filter: brightness(80%);
+}
+
+.viewCartContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+}
+
+.viewCartLabel {
+    padding-top: 0.2rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07rem;
+}
+
+
+
+@media only screen and (max-width: 750px) {
+    button.headingButton {
+        display: block;
+    }
+
+    .orderContainer {
+        position:absolute;
+        width: 100%;
+        max-width: 34rem;
+        height: 100%;
+        margin: auto;
+        top: 0;
+        right: 0;
+        animation-duration:  0.3s;
+        animation-timing-function:  ease-out;
+        animation-fill-mode:  forwards;
+    }
+
+    .footer {
+        display: flex;
+    }
+} 
+
+@keyframes hideOrderView {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(105%, 0);
+        visibility: hidden;
+    }
+}
+
+@keyframes showOrderView {
+    0% {
+        visibility: visibility;
+        transform: translate(100%, 0);
+    }
+    100% {
+        transform: translate(0, 0);
+        
+    }
+}
+
 
 </style>
