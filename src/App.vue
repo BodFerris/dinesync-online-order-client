@@ -152,4 +152,10 @@ button.outlineButton .buttonContent {
      letter-spacing: 0.07rem;
  }
 
+ @media only screen and (max-width: 400px) {
+    html {
+        font-size: 55%;
+    }
+ }
+
 </style>

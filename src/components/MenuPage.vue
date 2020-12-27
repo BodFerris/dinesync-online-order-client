@@ -1,25 +1,28 @@
 <template>
     <div class="mainContent">
         <header>
-            <div class="headingNameAndMenuContainer majorHeadingText">
-                <div>{{ mainHeadingText }}</div>
-                <div v-if="selectedMenu" class="menuNameContainer" ref="menuNameContainer"
-                    @click="showMenuDropdown()"><span>{{ selectedMenu.name }}<i class="material-icons" 
-                        style="color: var(--var-primaryNeutralVar3-color);">arrow_drop_down</i></span></div>
-            </div>
-
-            <button ref="headingButton" class="headingButton" @click="toggleOrderPanel()">
-                <div class="viewCartContainer">
-                    <template v-if="isOrderPanelOpened">
-                        <div class="iconContainer"><i class="material-icons">visibility_off</i></div>
-                        <div class="viewCartLabel">Hide Order</div>
-                    </template>
-                    <template v-else>
-                        <div class="iconContainer"><i class="material-icons">shopping_cart</i></div>
-                        <div class="viewCartLabel">View Order</div>
-                    </template>
+            <div class="outsideMainHeading">{{ mainHeadingText }}</div>
+            <div class="headerRow">
+                <div class="headingNameAndMenuContainer majorHeadingText">
+                    <div class="inlineMainHeading">{{ mainHeadingText }}</div>
+                    <div v-if="selectedMenu" class="menuNameContainer" ref="menuNameContainer"
+                        @click="showMenuDropdown()"><span>{{ selectedMenu.name }}<i class="material-icons" 
+                            style="color: var(--var-primaryNeutralVar3-color); font-size: 1em;">arrow_drop_down</i></span></div>
                 </div>
-            </button>
+
+                <button ref="headingButton" class="headingButton" @click="toggleOrderPanel()">
+                    <div class="viewCartContainer">
+                        <template v-if="isOrderPanelOpened">
+                            <div class="iconContainer"><i class="material-icons">visibility_off</i></div>
+                            <div class="viewCartLabel">Hide Order</div>
+                        </template>
+                        <template v-else>
+                            <div class="iconContainer"><i class="material-icons">shopping_cart</i></div>
+                            <div class="viewCartLabel">View Order</div>
+                        </template>
+                    </div>
+                </button>
+            </div>
 
         </header>
         <div class="splitContent">
@@ -373,7 +376,7 @@ export default defineComponent({
             selectedMenu.value = defaultMenu;
             menuDropdown.value.setSelectedItem(selectedMenu.value);
 
-            mainHeadingText.value = restaurantInfo.value.name + ' ' + ((menuList.value.length > 1) ? 'Menus' : 'Menu');
+            mainHeadingText.value = restaurantInfo.value.name + ' Menu';
         };
 
         onMounted(() => {
@@ -534,6 +537,21 @@ header {
     box-shadow: 0.1rem 0.5rem 1.5rem -0.6rem var(--var-primaryOverlay-color);
 }
 
+.inlineMainHeading {
+    display: block
+}
+
+.outsideMainHeading {
+    display: none;
+    font-weight: 600;
+}
+
+.headerRow {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
 .headingNameAndMenuContainer,
 .menuNameContainer {
     display: inline-flex;
@@ -562,7 +580,7 @@ header {
 
     padding: 0.5rem 2rem;
     box-sizing: border-box;
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     font-weight: 600;
 
     background-color: var(--var-primaryVar3-color);
@@ -698,6 +716,38 @@ button.headingButton:active {
         display: flex;
     }
 } 
+
+@media only screen and (max-width: 400px) {
+    header {
+        padding: 0 0.7rem;
+        height: 8.4rem;
+        flex-direction: column;
+    }
+
+    .headingNameAndMenuContainer,
+    .menuNameContainer {
+        font-size: 1.8rem; 
+    }
+
+    .menuNameContainer {
+        padding: 0.1em 0.33em;
+        margin-left: 0.33em;
+        border: 1px solid var(--var-primaryNeutralVar3-color);
+    }
+
+    .majorHeadingText {
+        font-size: 1.8rem; 
+    }
+
+    .inlineMainHeading {
+        display: none
+    }
+
+    .outsideMainHeading {
+        display: block;
+        font-size: 1.8rem; 
+    }
+}
 
 @keyframes hideOrderView {
     0% {

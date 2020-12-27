@@ -8,8 +8,10 @@
                     <div v-if="menuItem.priceList.length <= 2">{{ toCondensedPriceListText(menuItem.priceList) }}</div>
                 </template>
                 <template v-else>
-                    <div  v-for="priceItem in menuItem.priceList" :key="priceItem.size" class="menuItemPriceListContainer">
-                        <div><span class="menuItemSizeLabel" v-if="!isStringEmpty(priceItem.size)">{{ priceItem.size }}</span>${{ toPriceText(priceItem.price) }}</div>
+                    <div class="menuItemPriceListContainer">
+                        <div  v-for="priceItem in menuItem.priceList" :key="priceItem.size" class="menuItemPriceListItem">
+                            <div><span class="menuItemSizeLabel" v-if="!isStringEmpty(priceItem.size)">{{ priceItem.size }}</span>${{ toPriceText(priceItem.price) }}</div>
+                        </div>
                     </div>
                 </template>
             </div>
@@ -145,14 +147,23 @@ export default defineComponent({
     color: var(--var-primaryFont-color);
 }
 
-
 .menuItemPriceListContainer {
+    display: flex; 
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    align-items:  baseline; 
+    justify-content: flex-end;
+}
+
+
+.menuItemPriceListItem {
     display: flex; 
     align-items:  baseline; 
     justify-content: space-between; 
     font-size: 1.5rem; 
     font-weight: 600; 
     box-sizing: border-box;
+    padding-left: 0.5rem;
 }
 
 .menuItemDescription {
