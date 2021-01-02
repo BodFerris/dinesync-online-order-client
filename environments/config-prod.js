@@ -1,4 +1,4 @@
 var AppConfig = {
-    stripeKey: 'pk_live_pmLq2Aw5FKoXe9y3JvqLb5Yh00Gab0giud',
+    stripeKey: 'pk_test_Hh3Sz1xYRjwDAKJ5MxHtGTBY00jOYEr8Xc',
     dinesyncEndpoint: 'https://seattleservice.dinesync.com'
 }

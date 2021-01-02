@@ -30,7 +30,7 @@
                 <template v-if="selectedMenu">
                     <div v-for="categoryItem in selectedMenu.categoryList" :key="categoryItem.id" style="margin-bottom: 3rem;">
                         <div style="font-size: 2.4rem; text-transform: uppercase; color: #0a2749; margin-bottom: 1.5rem; letter-spacing: 0.1rem;">{{ categoryItem.name }}</div>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr)); grid-gap: 2rem;">
+                        <div class="mainGrid">
                             <MenuItemCard v-for="menuItem in categoryItem.menuItemList" :key="menuItem.id" 
                                     :menu="selectedMenu" :menuItem="menuItem" width="auto"
                                     @addToOrderRequested="addToOrder(menuItem)" />
@@ -457,6 +457,11 @@ export default defineComponent({
     border-top-width: 1px;
 }
 
+.mainGrid {
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr)); grid-gap: 2rem;
+}
+
 .orderContainer {
     position: relative;
     flex: 0 0 auto;
@@ -580,7 +585,7 @@ header {
 
     padding: 0.5rem 2rem;
     box-sizing: border-box;
-    font-size: 1.7rem;
+    font-size: 2.4rem;
     font-weight: 600;
 
     background-color: var(--var-primaryVar3-color);
@@ -660,7 +665,7 @@ button.headingButton {
 }
 
 button.headingButton .iconContainer {
-    border: 1px solid var(--var-sideBarFont-color);
+    border: 2px solid var(--var-sideBarFont-color);
     border-radius: 100%;
     width: 3.2rem;
     height: 3.2rem;
@@ -720,13 +725,13 @@ button.headingButton:active {
 @media only screen and (max-width: 400px) {
     header {
         padding: 0 0.7rem;
-        height: 8.4rem;
+        height: 9.5rem;
         flex-direction: column;
     }
 
     .headingNameAndMenuContainer,
     .menuNameContainer {
-        font-size: 1.8rem; 
+        font-size: 2.4rem; 
     }
 
     .menuNameContainer {
@@ -736,7 +741,7 @@ button.headingButton:active {
     }
 
     .majorHeadingText {
-        font-size: 1.8rem; 
+        font-size: 2.4rem; 
     }
 
     .inlineMainHeading {
@@ -745,8 +750,12 @@ button.headingButton:active {
 
     .outsideMainHeading {
         display: block;
-        font-size: 1.8rem; 
+        font-size: 2.4rem; 
     }
+
+.mainGrid {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); grid-gap: 2rem;
+}
 }
 
 @keyframes hideOrderView {

@@ -722,7 +722,7 @@ button.nux-sideBarButton:focus {
 
 @media screen and (max-height: 780px) {
     .nux-dlg-container {
-        max-height: 100vh;
+        max-height: 100%;
     }
 }
 

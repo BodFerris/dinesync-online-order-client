@@ -4,7 +4,8 @@ import { MenuHelper } from './dinesync/dto/utility/MenuHelper';
 export class DataManager {
     //https://localhost:44354/api/RestaurantClient/OnlineData/asdfasdf/ddd
     static restaurantId = '475cd90c-d11b-4351-8a25-d836984c1796';
-    static onlineDataEndpoint = "https://localhost:44354/";
+    //static onlineDataEndpoint = "https://localhost:44354/";
+    static onlineDataEndpoint = "https://seattleservice.dinesync.com/";
 
     static async fetchMenuData(): Promise<Array<MenuDTO>> {
         let endPoint = DataManager.onlineDataEndpoint + `api/RestaurantClient/OnlineData/${DataManager.restaurantId}/menus.json`;

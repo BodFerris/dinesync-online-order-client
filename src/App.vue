@@ -24,6 +24,7 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    position: fixed;
 }
 
 html {
@@ -150,12 +151,6 @@ button.outlineButton .buttonContent {
      font-size: 1.5rem;
      text-transform: uppercase;
      letter-spacing: 0.07rem;
- }
-
- @media only screen and (max-width: 400px) {
-    html {
-        font-size: 55%;
-    }
  }
 
 </style>
