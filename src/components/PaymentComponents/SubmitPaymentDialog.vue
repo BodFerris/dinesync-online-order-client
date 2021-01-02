@@ -27,6 +27,7 @@
                     <label>Delivery Method</label>
                     <div class="price">Carry-Out</div>
                 </div>
+                <div class="horizontalRule"></div>
                 <label class="nux-labelVertical">phone number or email</label>
                 <input ref="phoneOrEmailTextBox" type="text" class="nux-textBox" style="width: 100%;" />
 
@@ -34,7 +35,7 @@
 
                 </div>
 
-                <div ref="paymentRequestButton"></div>
+                <div ref="paymentRequestButton" style="margin-bottom: 1.5rem;"></div>
             </div>
         </template>
         <template v-slot:footer>
@@ -486,6 +487,12 @@ export default defineComponent({
     font-size: 1.5rem;
 }
 
+.horizontalRule {
+    height: 1px;
+    width: 100%;
+    margin: 0.7rem 0;
+    background-color: var(--var-secondaryVar1-color);
+}
 
 .statusContainer {
     display: flex;
