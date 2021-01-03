@@ -4,7 +4,7 @@
             <Checkbox :boundObject="orderMenuItemOption" boundPropName="isSelected">{{ orderMenuItemOption.name }}</Checkbox>
 
             <div class="quantityInputContainer">
-                <template v-if="orderMenuItemOption.isMoreThanOne">
+                <template v-if="orderMenuItemOption.isMoreThanOne && !orderMenuItemOption.isQuantityWordUsed">
                     <button class="outlineButton" @click="changeQty(-1)">
                         <div class="buttonContent"><i class="material-icons">remove</i></div>
                     </button>
@@ -13,7 +13,7 @@
                         <div class="buttonContent"><i class="material-icons">add</i></div>
                     </button>
                 </template>
-                <template v-else-if="orderMenuItemOption.isQuantityWordUsed">
+                <template v-else-if="orderMenuItemOption.isMoreThanOne && orderMenuItemOption.isQuantityWordUsed">
                     <button class="outlineButton" @click="prevQuantityWord()">
                         <div class="buttonContent"><i class="material-icons">chevron_left</i></div>
                     </button>

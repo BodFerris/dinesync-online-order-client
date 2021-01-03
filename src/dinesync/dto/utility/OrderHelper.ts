@@ -783,7 +783,7 @@ export class OrderHelper {
             returnValue.push({
                 title: title,
                 quantity: quantity,
-                isQuantityWordUsed: false ?? optionItem?.isQuantityWordUsed,
+                isQuantityWordUsed: optionItem?.isQuantityWordUsed ?? false,
                 price: price,
                 indent: indent
             });

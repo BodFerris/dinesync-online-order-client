@@ -48,7 +48,12 @@ export class OrderInfoHelper {
 
         let optionsImpactingOrder = OrderHelper.getOptionsImpactingOrder([optionGroup]);
         let groupQuantityInfo = <IOptionGroupQuantityInfo>OrderHelper.getPriceBySize(size, optionGroup.quantityInfoList);
-        let isValidationDonebyGroupLevel = groupQuantityInfo.price > 0;
+
+        // TODO: I'm not too sure why validation was only done if price is not zero;
+        // in somecases, menu items allow to pick 2 sides out of 4, for example
+        // If making true does not regress, then keep it
+        //let isValidationDonebyGroupLevel = groupQuantityInfo.price > 0;
+        let isValidationDonebyGroupLevel = true;
 
         if (isValidationDonebyGroupLevel) {
             let totalOptionsSelected = optionsImpactingOrder.reduce((agg, i) => {
@@ -59,11 +64,11 @@ export class OrderInfoHelper {
                 return agg;
              }, 0);
 
-             if ((groupQuantityInfo.maxOptionsAllowed != 0) && (totalOptionsSelected > groupQuantityInfo.maxOptionsAllowed)) {
+             if ((groupQuantityInfo.maxOptionsAllowed !== 0) && (totalOptionsSelected > groupQuantityInfo.maxOptionsAllowed)) {
                  returnValue.errorList.push(`Exceeded max options allowed for ${optionGroup.name}.  Max selection allowed is ${groupQuantityInfo.maxOptionsAllowed}.`);
              }
 
-             if (totalOptionsSelected < groupQuantityInfo.minOptionsAllowed) {
+             if ((groupQuantityInfo.minOptionsAllowed !== 0)  && (totalOptionsSelected < groupQuantityInfo.minOptionsAllowed)) {
                  let amountOfOptionsAvailable = groupQuantityInfo.minOptionsAllowed - totalOptionsSelected ;
                  returnValue.warningList.push(`You can select ${amountOfOptionsAvailable} more options for ${optionGroup.name}.`);
              }
