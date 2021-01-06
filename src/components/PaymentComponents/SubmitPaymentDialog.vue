@@ -28,14 +28,19 @@
                     <div class="price">Carry-Out</div>
                 </div>
                 <div class="horizontalRule"></div>
-                <label class="nux-labelVertical">phone number or email</label>
+                <label class="nux-labelVertical">name for pickup (go by name)</label>
+                <input ref="gobyNameTextBox" type="text" class="nux-textBox" style="width: 100%;" />
+
+                <label class="nux-labelVertical" style="margin-top: 0.5rem;">phone number</label>
                 <input ref="phoneOrEmailTextBox" type="text" class="nux-textBox" style="width: 100%;" />
+
+                <div ref="paymentRequestButton" style="margin-top: 1rem;"></div>
 
                 <div ref="statusContainer" class="statusContainer">
 
                 </div>
 
-                <div ref="paymentRequestButton" style="margin-bottom: 1.5rem;"></div>
+                
             </div>
         </template>
         <template v-slot:footer>
@@ -102,7 +107,8 @@ interface IValidatedData {
     isValid: boolean;
     errorReason: string;
     phoneNumber: string; 
-    email: string
+    email: string,
+    nameForPickup: string
 }
 
 var payButton: stripe.elements.Element;
@@ -147,8 +153,16 @@ async function intializePaymentButton(
         payButton.mount(paymentButtonHost);
         
         payButton.on('click', (clickEventInfo) => {
-            validatedData = validateData();
-            if (!validatedData.isValid) {
+            try {
+                validatedData = validateData();
+                if (!validatedData.isValid) {
+                    clickEventInfo.preventDefault();
+                    return;
+                }
+            }
+            catch (errorInfo) {
+                validatedData = {} as IValidatedData;
+                console.error('Error occured when validating data: ' + errorInfo.message);
                 clickEventInfo.preventDefault();
                 return;
             }
@@ -160,6 +174,10 @@ async function intializePaymentButton(
 
         paymentRequest.on('paymentmethod', async (eventInfo) => {
             try {
+                order.contactPhone = validatedData.phoneNumber;
+                order.contactName = validatedData.nameForPickup;
+                order.groupList[0].name = validatedData.nameForPickup;
+
                 // validate that the order price and menu items matches the official menu
                 let validateOrderResult = await OrderManager.validateOrder(order);
                 if (!validateOrderResult.isValid) {
@@ -167,6 +185,7 @@ async function intializePaymentButton(
                     eventInfo.complete('fail');
                     return;
                 }
+
 
                 // stripe payment intent
                 var clientSecret = await createPaymentIntent(grandTotalCharge, order.id, order.groupList[0].id);
@@ -277,25 +296,48 @@ export default defineComponent({
         const statusContainer = ref(null as unknown as HTMLElement);
         const paymentRequestButton = ref(null as unknown as HTMLDivElement);
         const phoneOrEmailTextBox = ref(null as unknown as HTMLInputElement);
+        const gobyNameTextBox = ref(null as unknown as HTMLInputElement);
 
         const validateData = (): IValidatedData => {
             let returnValue = {
                 isValid: false,
                 errorReason: '',
                 phoneNumber: '',
-                email: ''
+                email: '',
+                nameForPickup: ''
             } as IValidatedData;
 
             let errorMessage = '';
             let phoneNumber = '';
             let email = '';
-            
+
+            let gobyNameValue = gobyNameTextBox.value.value.trim();
+            if (StringUtility.isNullOrEmpty(gobyNameValue.trim())) {
+                errorMessage += 'Name for pickup cannot be empty. ';
+            }
+            else if (gobyNameValue.length > 15) {
+                errorMessage += 'Name for pickup must be less than 15 characters.';
+            }
+            else {
+                returnValue.nameForPickup = gobyNameValue;
+            }
+
             let phoneOrEmailValue = phoneOrEmailTextBox.value.value.trim();
+            if (Validator.isPhoneNumber(phoneOrEmailValue, true)) {
+                returnValue.phoneNumber = phoneOrEmailValue;
+            }
+            else {
+                errorMessage += 'Requires a valid phone number with area code. ';
+            }
+            
+            // 5 Jan 2021: wanted to have phone number since easier to contact
+            // the customer if something goes wrong with the order
+            // the value must be a phone numbe or an email address
+            /*
             if (phoneOrEmailValue === '') {
                 errorMessage += 'Need a phone or email. ';
             }
             else {
-                // the value must be a phone numbe or an email address
                 if (!Validator.isPhoneNumber(phoneOrEmailValue, false) && !Validator.isEmail(phoneOrEmailValue)) {
                     errorMessage += 'Requires a valid phone number or email address.  Phone numbers require area code. ';
                 }
@@ -309,11 +351,12 @@ export default defineComponent({
                     phoneNumber = (Validator.isPhoneNumber(phoneOrEmailValue, true)) ? phoneOrEmailValue : '';
                 }
             }
+            */
 
             returnValue.isValid = errorMessage === '';
             returnValue.errorReason = errorMessage;
-            returnValue.phoneNumber = phoneNumber;
-            returnValue.email = email;
+            //returnValue.phoneNumber = phoneNumber;
+            //returnValue.email = email;
 
             if (errorMessage !== '') {
                 showMessage(errorMessage, phoneOrEmailTextBox.value);
@@ -424,6 +467,7 @@ export default defineComponent({
             messageDialogContent,
             statusContainer,
             phoneOrEmailTextBox,
+            gobyNameTextBox,
             paymentRequestButton,
 
             onlineSurcharge,
@@ -500,7 +544,6 @@ export default defineComponent({
     height: 8.6rem;
     width: 100%;
     margin-top: 1rem;
-    margin-bottom: 1rem;
     overflow: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
