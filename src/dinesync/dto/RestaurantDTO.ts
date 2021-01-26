@@ -240,3 +240,12 @@ export interface IModifedObject {
     deletedTypeName?: string,
     typeName: string
 }
+
+export class DeliveryDispatcher {
+    id = '';
+    parentId = '';
+    name = '';
+    phone = '';
+    
+    typeName = 'DeliveryDispatcher';
+}

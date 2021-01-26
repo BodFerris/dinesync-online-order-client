@@ -22,6 +22,16 @@ export enum OrderStateEnum {
     voided = 'void'
 }
 
+// TODO: abandoned state, may be removed, and the data
+// just deleted when an abandoned
+export enum DeliveryStateEnum {
+    unknown = 'unknown',
+    delivering  = 'delivering',
+    delivered = 'delivered',
+    failed = 'failedDelivery',
+    abandoned = 'abandoned'
+}
+
 export enum OrderTypeEnum {
     DineIn = 'Dine-In',
     CarryOut = 'Carry-Out',
@@ -684,6 +694,8 @@ export interface IOrderCore {
     contactName: string;
     contactPhone: string;
     contactAddress: string;
+    deliveryGroupId: string;
+    deliverySpecialInstructions: string;
     serverName: string;
     totalPrice: number;
     totalTax: number;
@@ -724,6 +736,8 @@ export class OrderDTO implements IOrder {
     public contactName: string = '';
     public contactPhone: string = '';
     public contactAddress: string = '';
+    public deliveryGroupId = '';
+    public deliverySpecialInstructions = '';
     public serverName: string = '';
     public totalPrice: number = 0;
     public totalTax: number = 0;
@@ -774,6 +788,61 @@ export class CashDrawerDTO {
 
     public lastModified: number = 0;
     public typeName: string = 'CashDrawerDTO';
+}
+
+export class OrderDeliveryStatus {
+    id = '';
+    parentId = '';
+    orderId = '';
+    orderNumber = '';
+    deliveryGroupId = '';
+    contactName = '';
+    contactPhone = '';
+    contactAddress = '';
+    deliveryStatus =  DeliveryStateEnum.unknown;
+
+    // used for auditing purposes if delivery gets messed up;
+    // it should rarely be removed and added to a different group
+    lastAddedToDeliveryGroupTimestamp : number = 0;
+    lastRemovedFromDeliveryGroupTimestamp: number = 0;
+
+    deliveryGroupTimestamp = 0;  // used to speed up retrieival from table storage (not document database) row key; cannot change once added to DB
+    lastModified = 0;
+    typeName = 'OrderDeliveryStatus';
+}
+
+export interface IDeliveryGroup {
+    id: string;
+    parentId: string;
+    orderDeliveryStatusList: Array<OrderDeliveryStatus>;
+    timestamp: number;
+    dispatchPickupTimestamp: number;
+    disptachterContactId: string;
+    dispatcherName: string;
+    dispatcherPhone: string;
+    isComplete: boolean;
+
+    lastModified: number;
+    typeName: string
+}
+
+export interface IDeliveryGroupView extends IDeliveryGroup {
+    orderDeliveryStatusList: Array<OrderDeliveryStatus>
+}
+
+export class DeliveryGroup implements IDeliveryGroup {
+    id = '';
+    parentId = '';
+    orderDeliveryStatusList = new Array<OrderDeliveryStatus>();
+    timestamp = 0;
+    dispatchPickupTimestamp = 0;
+    disptachterContactId = '';
+    dispatcherName = '';
+    dispatcherPhone = '';
+    isComplete = false;
+
+    lastModified = 0;
+    typeName = 'DeliveryGroup';
 }
 
 export interface ITicketKitchenUpdateInfo {
@@ -1001,3 +1070,4 @@ export interface ITicketLiquorUsageInfo {
     ticketTimestamp: number;
     orderTakenTimestamp: number;
 }
+
