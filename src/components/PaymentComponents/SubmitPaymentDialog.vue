@@ -1,7 +1,7 @@
 <template>
     <ModalDialog ref="dialog" headerPadding="0px" width="34rem">
         <template v-slot:header>
-            <div class="dialogHeading">
+            <div  ref="dialogHeading" class="dialogHeading">
                 <div>Charge ${{ grandTotalToChargeText }}</div>
             </div>
         </template>
@@ -16,29 +16,35 @@
                     <div class="price">${{ taxTotalText }}</div>
                 </div>
                 <div class="totalSummary"  v-if="onlineSurcharge > 0">
-                    <label>Online Surchage</label>
+                    <label>Online Surcharge</label>
                     <div class="price">${{ toPriceText(onlineSurcharge) }}</div>
                 </div>
                 <div class="totalSummary" style="font-weight: 600;"  v-if="areGrandTotalsShown">
                     <label>Grand Total</label>
                     <div class="price">${{ grandTotalToChargeText }}</div>
                 </div>
-                <div class="deliveryMethodSummary" style="font-weight: 600; margin-top: 1.5rem">
-                    <label>Delivery Method</label>
-                    <div class="price">Carry-Out</div>
-                </div>
                 <div class="horizontalRule"></div>
+
+                <label class="nux-labelVertical">Delivery Method</label>
+                <Dropdown  ref="orderTypeDropdown" width="30rem"  :itemList="orderTypeList" @selected="handleOrderTypeSelected" />
+
                 <label class="nux-labelVertical">name for pickup (go by name)</label>
                 <input ref="gobyNameTextBox" type="text" class="nux-textBox" style="width: 100%;" />
 
-                <label class="nux-labelVertical" style="margin-top: 0.5rem;">phone number</label>
+                <label class="nux-labelVertical" >phone number</label>
                 <input ref="phoneOrEmailTextBox" type="text" class="nux-textBox" style="width: 100%;" />
 
+                <AutoGrowContainer ref="addressAutoGrowContainer" maxHeight="10rem">
+                    <label class="nux-labelVertical" >address</label>
+                    <textarea ref="addressTextBox" class="nux-textBox" style="width: 100%; height: 6rem"></textarea>
+                </AutoGrowContainer>
+
+                <AutoGrowContainer ref="tableAutoGrowContainer" maxHeight="10rem">
+                    <label class="nux-labelVertical" >table</label>
+                    <input type="text" class="nux-textBox" style="width: 100%;" />
+                </AutoGrowContainer>
+
                 <div ref="paymentRequestButton" style="margin-top: 1rem;"></div>
-
-                <div ref="statusContainer" class="statusContainer">
-
-                </div>
 
                 
             </div>
@@ -58,6 +64,8 @@
 <script lang="ts">
 import SimpleDialog, { ISimpleDialog } from "@/next-ux2/components/dialogs/simple-dialog.vue";
 import ModalDialog, { IModalDialog } from "@/next-ux2/components/dialogs/modal-dialog.vue";
+import Dropdown, { IDropdown } from "@/next-ux2/components/input/dropdown.vue";
+import AutoGrowContainer, {IAutoGrowContainer} from '@/next-ux2/components/containers/auto-grow-container.vue';
 
 import { computed, defineComponent, onMounted, ref } from 'vue';
 
@@ -72,14 +80,6 @@ import { OrderManager } from '@/payments/order-manager';
 import { hPlacement, vPlacement } from "@/next-ux2/utility/point-interface";
 
 declare var AppConfig: IConfig;
-
-function setStatusMessage(hostElement: HTMLElement, statusMessage: string) {
-    if (statusMessage.length > 200) {
-        statusMessage = statusMessage.substring(0, 200) + '...';
-    }
-
-    hostElement.textContent = statusMessage;
-}
 
 export function getGrandTotalToCharge(order: OrderDTO, onlineSurcharge: number): number {
     if (!onlineSurcharge) {
@@ -102,7 +102,6 @@ function toPriceText(value: number): string {
     }
 }
 
-
 interface IValidatedData {
     isValid: boolean;
     errorReason: string;
@@ -123,7 +122,7 @@ function cleanupPayment() {
 
 async function intializePaymentButton(
         paymentButtonHost: HTMLElement, 
-        statusHostElement: HTMLElement,
+        handlePaymentErrorCallback: (message: string) => void,
         phoneOrEmailTextBox: HTMLInputElement,
         restaurantInfo: IRestaurantInfo, 
         order: OrderDTO,
@@ -181,7 +180,7 @@ async function intializePaymentButton(
                 // validate that the order price and menu items matches the official menu
                 let validateOrderResult = await OrderManager.validateOrder(order);
                 if (!validateOrderResult.isValid) {
-                    setStatusMessage(statusHostElement,  'Payment failed with order validation. ' + validateOrderResult.failureReason);
+                    handlePaymentErrorCallback('Payment failed with order validation. ' + validateOrderResult.failureReason);
                     eventInfo.complete('fail');
                     return;
                 }
@@ -190,7 +189,8 @@ async function intializePaymentButton(
                 // stripe payment intent
                 var clientSecret = await createPaymentIntent(grandTotalCharge, order.id, order.groupList[0].id);
                 if (StringUtility.isNullOrEmpty(clientSecret)) {
-                    setStatusMessage(statusHostElement,  'Payment failed.  Problems contacting the server.');
+                    
+                    handlePaymentErrorCallback('Payment failed.  Problems contacting the server.');
                     eventInfo.complete('fail');
                     return;
                 }
@@ -205,7 +205,7 @@ async function intializePaymentButton(
                             errorMessage = 'An error occured while trying to process payment.';
                         }
 
-                        setStatusMessage(statusHostElement,  'Payment failed.  ' + errorMessage);
+                        handlePaymentErrorCallback('Payment failed.  ' + errorMessage);
                         eventInfo.complete('fail');
                         return;
                     }
@@ -248,7 +248,7 @@ async function intializePaymentButton(
                             let stripeConfirmResult = await stripe.confirmCardPayment(clientSecret);
                             stripeConfirmResult.paymentIntent
                             if (stripeConfirmResult.error) {
-                                setStatusMessage(statusHostElement,  'Payment failed.  Try using a different card.');
+                                handlePaymentErrorCallback('Payment failed.  Try using a different card.');
                             }
                             else {
                                 paymentSuccesfullyCompletedCallback();
@@ -261,7 +261,7 @@ async function intializePaymentButton(
                 }
             }
             catch (errorInfo) {
-                setStatusMessage(statusHostElement,  'Payment failed.  ' + errorInfo.message);
+                handlePaymentErrorCallback('Payment failed.  ' + errorInfo.message);
                 eventInfo.complete('fail');
             }
 
@@ -278,7 +278,9 @@ export default defineComponent({
     name: 'SubmitPaymentDialog',
     components: {
         SimpleDialog,
-        ModalDialog
+        ModalDialog,
+        Dropdown,
+        AutoGrowContainer
     },
     emits: [],
     props: {
@@ -293,10 +295,17 @@ export default defineComponent({
         const dialog = ref(null as unknown as IModalDialog);
         const messageDialog = ref(null as unknown as ISimpleDialog);
         const messageDialogContent = ref(null as unknown as HTMLElement);
-        const statusContainer = ref(null as unknown as HTMLElement);
+        const dialogHeading = ref(null as unknown as HTMLElement);
         const paymentRequestButton = ref(null as unknown as HTMLDivElement);
         const phoneOrEmailTextBox = ref(null as unknown as HTMLInputElement);
         const gobyNameTextBox = ref(null as unknown as HTMLInputElement);
+        const orderTypeDropdown = ref(null as unknown as IDropdown);
+        const addressTextBox = ref(null as unknown as HTMLTextAreaElement);
+        const addressAutoGrowContainer = ref(null as unknown as IAutoGrowContainer)
+        const tableAutoGrowContainer = ref(null as unknown as IAutoGrowContainer)
+
+        // data
+        const orderTypeList = ref(['Carry-Out']);
 
         const validateData = (): IValidatedData => {
             let returnValue = {
@@ -377,12 +386,28 @@ export default defineComponent({
         }
 
         const show = async () => {
-            setStatusMessage(statusContainer.value, '');
+
+            // create order type dropown options
+            let restaurantInfo = props.restaurantInfo as IRestaurantInfo;
+        
+            orderTypeList.value.length = 0;
+            orderTypeList.value.push('Carry-Out');
+            if (restaurantInfo.hasDelivery) {
+                orderTypeList.value.push('Delivery');
+            }
+
+            // select carry-out as the default delivery type
+            orderTypeDropdown.value.selectedItem = 'Carry-Out';
+
+            if (restaurantInfo.allowOnlineDineInOrdering) {
+                orderTypeList.value.push('Dine-In');
+            }
+
             let waitForDialogToClosePromise = dialog.value.show();
             
             let wasButtonCreated = await intializePaymentButton(
                 paymentRequestButton.value, 
-                statusContainer.value,
+                handlePaymentError,
                 phoneOrEmailTextBox.value,
                 props.restaurantInfo as IRestaurantInfo,
                 props.order as OrderDTO, 
@@ -390,20 +415,43 @@ export default defineComponent({
                 validateData);
                 
             if (!wasButtonCreated) {
-                setStatusMessage(statusContainer.value, 'System does not support Apple, Google, or Microsoft Pay.');
+                showMessage('Your system or browser does not support Apple, Google, or Microsoft Pay.');
             }
 
             let result = await waitForDialogToClosePromise;
             return result;
         };
 
+        const handlePaymentError = (message: string) => {
+            showMessage(message);
+        }
+
+        const handleOrderTypeSelected = (typeSelected: string) => {
+            switch(typeSelected){
+                case 'Carry-Out':
+                    addressAutoGrowContainer.value.collapse();
+                    tableAutoGrowContainer.value.collapse();
+                    break;
+
+                case 'Delivery':
+                    addressAutoGrowContainer.value.expand();
+                    tableAutoGrowContainer.value.collapse();
+                    break;
+
+                case 'Dine-In':
+                    addressAutoGrowContainer.value.collapse();
+                    tableAutoGrowContainer.value.expand();
+                    break;
+
+            }
+        }
         
         const showMessage = (message: string, anchorElement?: HTMLElement) => {
             let horizPos: hPlacement = 'center';
             let vertPos: vPlacement = 'bottom'
 
             if (!anchorElement) {
-                anchorElement = document.body;
+                anchorElement = dialogHeading.value;
                 vertPos = 'center';
             }
 
@@ -465,10 +513,16 @@ export default defineComponent({
             dialog,
             messageDialog,
             messageDialogContent,
-            statusContainer,
+            dialogHeading,
             phoneOrEmailTextBox,
             gobyNameTextBox,
             paymentRequestButton,
+            orderTypeDropdown,
+            addressTextBox,
+            addressAutoGrowContainer,
+            tableAutoGrowContainer,
+
+            orderTypeList,
 
             onlineSurcharge,
             grandTotalToChargeText,
@@ -477,6 +531,8 @@ export default defineComponent({
             areGrandTotalsShown,
 
             toPriceText: toPriceText,
+
+            handleOrderTypeSelected,
 
             show,
             hide
@@ -505,7 +561,6 @@ export default defineComponent({
     color: var(--var-sideBarFont-color);
 }
 
-.deliveryMethodSummary,
 .totalSummary {
     display: flex;
     justify-content: space-between;
@@ -514,7 +569,6 @@ export default defineComponent({
     font-size: 1.5rem;
 }
 
-.deliveryMethodSummary label,
 .totalSummary label {
     margin: 0;
     padding: 0;
@@ -538,6 +592,10 @@ export default defineComponent({
     background-color: var(--var-secondaryVar1-color);
 }
 
+.nux-labelVertical {
+    margin-top: 0.5rem;
+}
+
 .statusContainer {
     display: flex;
     align-items: center;
@@ -549,6 +607,12 @@ export default defineComponent({
     -webkit-overflow-scrolling: touch;
 
     font-size: 1.5rem;
+}
+
+.autoGrowContainer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-in;
 }
 
 </style>

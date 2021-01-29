@@ -63,7 +63,8 @@ export class DataManager {
         });
 
         if (fetchResult.ok) {
-            return JSON.parse(await fetchResult.text());
+            let jsonText = await fetchResult.text();
+            return JSON.parse(jsonText);
         }
         else {
             throw new Error(fetchResult.status.toString + ': ' + fetchResult.statusText);

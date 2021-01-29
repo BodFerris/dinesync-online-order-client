@@ -20,6 +20,15 @@ export interface IRestaurantInfo {
     isOnlineOrdersStopped: boolean;
     onlineOrdersStoppedMessage: string;
     onlineOrdersCloseTimeOffset: number;
+
+    allowOnlineDineInOrdering: boolean,
+
+    hasDelivery: boolean;
+    deliveryServiceType: string,
+    deliverySurcharge: number,
+    minimumDeliveryOrderAmount:number
+    isDeliveryStopped: boolean,
+    deliveryStoppedMessage: string
 }
 
 export class RestaurantDTO implements IRestaurantCoreInfo {

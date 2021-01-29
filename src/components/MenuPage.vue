@@ -209,7 +209,16 @@ export default defineComponent({
             isOnlineOrdersStopped: false,
             onlineOrdersStoppedMessage: '',
             hasOnlineOrders: true,
-            onlineOrdersCloseTimeOffset: 0
+            onlineOrdersCloseTimeOffset: 0,
+
+            allowOnlineDineInOrdering: false,
+
+            hasDelivery: false,
+            deliveryServiceType: 'Vehicle',
+            deliverySurcharge: 0,
+            minimumDeliveryOrderAmount: 0,
+            isDeliveryStopped: false,
+            deliveryStoppedMessage: ''
         });
         const selectedMenu = ref(null as unknown as MenuDTO);
         const order = ref(null as unknown as OrderDTO);

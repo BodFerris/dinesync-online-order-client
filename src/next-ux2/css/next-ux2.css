@@ -926,6 +926,7 @@ input.nux-textBox,
 
 .nux-dropdownContainer {
     padding-right: 0;
+    max-width: 100%;
 }
 
 .nux-controlBorder {
