@@ -41,13 +41,12 @@
 
                 <AutoGrowContainer ref="tableAutoGrowContainer" maxHeight="10rem">
                     <label class="nux-labelVertical" >table</label>
-                    <input type="text" class="nux-textBox" style="width: 100%;" />
-                </AutoGrowContainer>
-
-                <div ref="paymentRequestButton" style="margin-top: 1rem;"></div>
-
-                
+                    <input ref="tableTextBox" type="text" class="nux-textBox" style="width: 100%;" />
+                </AutoGrowContainer>                
             </div>
+        </template>
+        <template v-slot:secondaryContent>
+            <div ref="paymentRequestButton" style="margin-top: 1rem;"></div>
         </template>
         <template v-slot:footer>
             <button class="nux-flatButton" @click="hide(false)" >Exit</button>
@@ -107,7 +106,10 @@ interface IValidatedData {
     errorReason: string;
     phoneNumber: string; 
     email: string,
-    nameForPickup: string
+    nameForPickup: string,
+    address: string,
+    orderType: string,
+    table: string
 }
 
 var payButton: stripe.elements.Element;
@@ -139,7 +141,6 @@ async function intializePaymentButton(
             amount: Math.round(grandTotalCharge * 100)
         }
     });
-
 
     let elements = stripe.elements();
     payButton = elements.create('paymentRequestButton', {
@@ -175,7 +176,15 @@ async function intializePaymentButton(
             try {
                 order.contactPhone = validatedData.phoneNumber;
                 order.contactName = validatedData.nameForPickup;
+                order.contactAddress = validatedData.address;
+                order.tableId = validatedData.table;
+                order.orderType = validatedData.orderType;
                 order.groupList[0].name = validatedData.nameForPickup;
+
+                // if delivery order, make sure that the address is within
+                // delivery distance
+
+                
 
                 // validate that the order price and menu items matches the official menu
                 let validateOrderResult = await OrderManager.validateOrder(order);
@@ -301,6 +310,7 @@ export default defineComponent({
         const gobyNameTextBox = ref(null as unknown as HTMLInputElement);
         const orderTypeDropdown = ref(null as unknown as IDropdown);
         const addressTextBox = ref(null as unknown as HTMLTextAreaElement);
+        const tableTextBox = ref(null as unknown as HTMLInputElement);
         const addressAutoGrowContainer = ref(null as unknown as IAutoGrowContainer)
         const tableAutoGrowContainer = ref(null as unknown as IAutoGrowContainer)
 
@@ -313,12 +323,13 @@ export default defineComponent({
                 errorReason: '',
                 phoneNumber: '',
                 email: '',
-                nameForPickup: ''
+                nameForPickup: '',
+                address: '',
+                table: '',
+                orderType: 'Carry-Out'
             } as IValidatedData;
 
             let errorMessage = '';
-            let phoneNumber = '';
-            let email = '';
 
             let gobyNameValue = gobyNameTextBox.value.value.trim();
             if (StringUtility.isNullOrEmpty(gobyNameValue.trim())) {
@@ -338,34 +349,34 @@ export default defineComponent({
             else {
                 errorMessage += 'Requires a valid phone number with area code. ';
             }
-            
-            // 5 Jan 2021: wanted to have phone number since easier to contact
-            // the customer if something goes wrong with the order
-            // the value must be a phone numbe or an email address
-            /*
-            if (phoneOrEmailValue === '') {
-                errorMessage += 'Need a phone or email. ';
-            }
-            else {
-                if (!Validator.isPhoneNumber(phoneOrEmailValue, false) && !Validator.isEmail(phoneOrEmailValue)) {
-                    errorMessage += 'Requires a valid phone number or email address.  Phone numbers require area code. ';
-                }
-                else if (!Validator.isEmail(phoneOrEmailValue)
-                        && !Validator.isPhoneNumber(phoneOrEmailValue, true)
-                        && Validator.isPhoneNumber(phoneOrEmailValue, false)) {
-                    errorMessage += 'Phone number requires area code.  ';
-                }
-                else {
-                    email = (Validator.isEmail(phoneOrEmailValue)) ? phoneOrEmailValue : '';
-                    phoneNumber = (Validator.isPhoneNumber(phoneOrEmailValue, true)) ? phoneOrEmailValue : '';
-                }
-            }
-            */
 
+            let orderType = orderTypeDropdown.value.selectedItem as string;
+            returnValue.orderType = orderType;
+            switch(orderType) {
+                case 'Delivery':
+                    // need to ensure that there is an address
+                    let address = addressTextBox.value.value.trim();
+                    if (StringUtility.isNullOrEmpty(address) || (address.length < 5)) {
+                        errorMessage += 'Delivery orders require a valid address. ';
+                    }
+                    else {
+                        returnValue.address = address;
+                    }
+                    break;
+
+                case 'Dine-In':
+                    let table = tableTextBox.value.value.trim();
+                    if (StringUtility.isNullOrEmpty(table)) {
+                        errorMessage += 'Dine-in online orders require your table code. ';
+                    }
+                    else {
+                        returnValue.table = table;
+                    }
+                    break;
+            }
+            
             returnValue.isValid = errorMessage === '';
             returnValue.errorReason = errorMessage;
-            //returnValue.phoneNumber = phoneNumber;
-            //returnValue.email = email;
 
             if (errorMessage !== '') {
                 showMessage(errorMessage, phoneOrEmailTextBox.value);
@@ -519,6 +530,7 @@ export default defineComponent({
             paymentRequestButton,
             orderTypeDropdown,
             addressTextBox,
+            tableTextBox,
             addressAutoGrowContainer,
             tableAutoGrowContainer,
 
